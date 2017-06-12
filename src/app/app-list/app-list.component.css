@@ -1,0 +1,8 @@
+
+.appElement {
+    margin-top: 10px;
+}
+
+.appElement.inService:hover {
+    cursor: pointer;
+}

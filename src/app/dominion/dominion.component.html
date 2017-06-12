@@ -1,0 +1,11 @@
+
+<div class="bodyWithMargin">
+  <app-list AppName="Dominion Apps" [Apps]="dominionApps" > </app-list>
+</div>
+
+
+<ul>
+  <li class="text" *ngFor="let dominionsetname of DominionSetNameList">
+    {{dominionsetname}}
+  </li>
+</ul>
