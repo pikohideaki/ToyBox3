@@ -30,6 +30,8 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 
 ## Installed Libraries
+* Angular CLI
+	* `npm install -g @angular/cli`
 * [Angular Material](https://material.angular.io/guide/getting-started)
 	* `npm install --save @angular/material`
 	* `npm install --save @angular/animations`
