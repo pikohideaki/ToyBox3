@@ -56,7 +56,7 @@ export class AddGameResultComponent implements OnInit {
 
   @Input() SelectedCards: SelectedCards = new SelectedCards();
 
-  @Input()  newGameResult: GameResult;
+  @Input() newGameResult: GameResult;
   // @Output() newGameResultChange = new EventEmitter<GameResult>();
 
 

@@ -35,6 +35,12 @@ export class RandomizerComponent implements OnInit {
     private FDBservice: MyFirebaseSubscribeService
   ) {
 
+    // get sync groups
+    FDB.list( "/syncGroups" ).subscribe( val => {
+      this.httpGetDone++;
+      // this.syncGroups = val.map( e => )
+    });
+
     FDB.list( '/data/DominionSetNameList' ).subscribe( val => {
       this.httpGetDone++;
       this.DominionSetNameList
@@ -54,13 +60,6 @@ export class RandomizerComponent implements OnInit {
       this.httpGetDone++;
       this.CardPropertyList = this.FDBservice.convertAs( val, "CardPropertyList" );
     });
-
-    // get sync groups
-    FDB.list( "/syncGroups" ).subscribe( val => {
-      this.httpGetDone++;
-      // this.syncGroups = val.map( e => )
-    });
-
   }
 
   httpGetAllDone() : boolean {

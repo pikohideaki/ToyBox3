@@ -22,9 +22,11 @@
 }
 
 .sidenav {
-  width: 400px;
-  max-width: 100vh;
-  /*background-color: #DBF7F7;*/
-  background-color: #F5F9FC;
+  max-width: 400px;
+  background-color: #DBF7F7;
+  /*background-color: #F5F9FC;*/
 }
 
+#closeSideNavBtn {
+  float: right;
+}

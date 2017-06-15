@@ -6,13 +6,26 @@ export class SyncGroup {
     name                 : string;
     password             : string;
     members              : string[];
-    createdTime          : Date;
+    timeStamp            : number;
     selectedCards        : SelectedCards;
     selectedDominionSets : boolean[];
+    active               : boolean;  // used in list view
     // gameResult    : GameResult;
 
-    constructor() {
-      this.createdTime = new Date( Date.now() );
-      this.selectedCards = new SelectedCards();
+    constructor( sgObj? ) {
+      this.name                 = "";
+      this.password             = "";
+      this.members              = [];
+      this.timeStamp            = 0;
+      this.selectedCards        = new SelectedCards();
+      this.selectedDominionSets = [];
+      this.active               = false;
+      if ( sgObj ) {
+        Object.keys( sgObj ).forEach( key => this[key] = sgObj[key] );
+      }
+    }
+
+    getDate() {
+      return ( this.timeStamp === 0 ? new Date( Date.now() ) : new Date( this.timeStamp ) );
     }
 }

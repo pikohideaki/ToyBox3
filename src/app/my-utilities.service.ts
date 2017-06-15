@@ -29,6 +29,19 @@ export class MyUtilitiesService {
   }
 
 
+  toYMD( date: Date ): string {
+    return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+  }
+
+  toHMS( date: Date ): string {
+    let padzero = ( str => ("00" + str).slice(-2) );
+    return `${padzero(date.getHours())}:${padzero(date.getMinutes() + 1)}:${padzero(date.getSeconds())}`;
+  }
+
+  toYMDHMS( date: Date ): string {
+    return `${this.toYMD( date )} ${this.toHMS( date )}`;
+  }
+
   getYestereday( date: Date ): Date {
     let yestereday = new Date( date );
     yestereday.setDate( yestereday.getDate() - 1 );  // yesterday

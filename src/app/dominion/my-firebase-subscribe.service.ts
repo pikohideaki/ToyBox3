@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { CardProperty } from "./card-property";
 import { GameResult } from "./game-result";
 import { PlayerName } from "./player-name";
+import { SyncGroup } from "./randomizer/sync-group";
 
 
 @Injectable()
@@ -41,6 +42,12 @@ export class MyFirebaseSubscribeService {
       case "ScoringList":
         val.forEach( e => result.push( Array.from(e) ) );
         console.log( "convertAs ScoringList done. " );
+        return result;
+
+      case "syncGroups":
+        // val.forEach( e => result.push( new SyncGroup(e) ) );
+        val.forEach( e => result.push( new SyncGroup(e) ) );
+        console.log( "convertAs syncGroups done. " );
         return result;
 
       default:

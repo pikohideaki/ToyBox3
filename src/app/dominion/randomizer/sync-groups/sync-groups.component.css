@@ -1,3 +1,11 @@
 .groupList {
   padding: 20px;
 }
+
+.groupListItem {
+  margin: 5px 0;
+}
+
+.groupListItem:hover {
+  cursor: pointer;
+}

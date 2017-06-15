@@ -1,9 +1,10 @@
 
 <md-sidenav-container class="sidenavContainer">
   <md-sidenav #sidenav class="sidenav" ><!--*ngIf="httpGetAllDone()">-->
-    <button md-button color="primary" (click)="sidenav.close()">
-      <md-icon>close</md-icon>
+    <button md-button color="primary" id="closeSideNavBtn" (click)="sidenav.close()">
+      <md-icon>cancel</md-icon>
     </button>
+    <div class="clear"></div>
     <app-sync-groups
         [SelectedCards]="SelectedCards"
         [newGameResult]="newGameResult"

@@ -1,14 +1,62 @@
 <div class="bodyWithMargin">
 
   <div id="addGroup">
-    <md-icon>group_add</md-icon>
+    <form #newGroupForm="ngForm" (ngSubmit)="addSyncGroup( newGroupForm )">
+      <md-input-container>
+        <input mdInput name="newGroupName" ngModel  placeholder="new group name" required>
+      </md-input-container>
+      <md-input-container>
+        <input mdInput name="newGroupPassword" ngModel  placeholder="password" required>
+      </md-input-container>
+
+      <md-select placeholder="your name" required name="myname"
+          id="mynameSelect" [(ngModel)]="myname" #mynameSelect="ngModel" >
+        <md-option *ngFor="let player of PlayersNameList" [value]="player.name">
+          {{ player.name }}
+        </md-option>
+      </md-select>
+
+      <button type="submit" md-raised-button color="primary"
+          [disabled]="!newGroupForm.form.valid">
+        <md-icon>group_add</md-icon>
+      </button>
+    </form>
   </div>
 
-  <md-list>
-    <md-list-item *ngFor="let group of syncGroups">
-      <!--<md-icon md-list-icon>folder</md-icon>
-      <h4 md-line>{{folder.name}}</h4>
-      <p md-line> {{folder.updated | date}} </p>-->    
-    </md-list-item>
-  </md-list>
+
+  <hr>
+
+  <div *ngFor="let group of syncGroups; let idx = index">
+    <md-card class="groupListItem" (click)="groupClicked(idx)">
+
+      <md-card-header>
+        <md-icon md-card-avatar>group</md-icon>
+        <md-card-title> {{group.name}} </md-card-title>
+        <md-card-subtitle>
+          {{group.members.join(", ")}}<br>
+          ({{utils.toYMDHMS(group.getDate())}})
+        </md-card-subtitle>
+      </md-card-header>
+
+      <md-card-content *ngIf="group.active">
+
+        <md-input-container>
+          <input mdInput name="newGroupPassword" placeholder="password" [(ngModel)]="password">
+        </md-input-container>
+
+        <md-select placeholder="your name" name="myname" [(ngModel)]="myname">
+          <md-option *ngFor="let player of PlayersNameList" [value]="player.name">
+            {{ player.name }}
+          </md-option>
+        </md-select>
+      
+      </md-card-content>
+
+      <md-card-actions *ngIf="group.active">
+        <button md-button (click)="signIn()">Sign in</button>
+      </md-card-actions>
+
+    </md-card>
+  </div>
+
 </div>
