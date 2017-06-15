@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-my-waiting-spinner',
+  selector: 'my-waiting-spinner',
   templateUrl: './my-waiting-spinner.component.html',
   styleUrls: ['./my-waiting-spinner.component.css']
 })
 export class MyWaitingSpinnerComponent implements OnInit {
 
+  @Input() httpGetDone: boolean;
   constructor() { }
 
   ngOnInit() {

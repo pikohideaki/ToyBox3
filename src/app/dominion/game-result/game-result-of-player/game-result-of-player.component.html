@@ -1,0 +1,36 @@
+
+<div class="marginedElement">
+  <table class='my-data-table  my-data-table--shadow3px'>
+    <thead>
+      <tr>
+        <th>順位</th>
+        <th>名前</th>
+        <th>平均得点</th>
+        <th>総得点</th>
+        <th>総対戦回数</th>
+        <th>1位回数</th>
+        <th>2位回数</th>
+        <th *ngIf="rankOptions[3]">3位回数</th>
+        <th *ngIf="rankOptions[4]">4位回数</th>
+        <th *ngIf="rankOptions[5]">5位回数</th>
+        <th *ngIf="rankOptions[6]">6位回数</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let playerResult of GameResultOfEachPlayerForView; let idx = index">
+        <th>{{idx + 1}}</th>
+        <th>{{playerResult.name}}</th>
+        <th>{{playerResult.scoreAverage}}</th>
+        <th>{{playerResult.scoreSum}}</th>
+        <th>{{playerResult.count}}</th>
+        <th>{{playerResult.countRank[1]}}</th>
+        <th>{{playerResult.countRank[2]}}</th>
+        <th *ngIf="rankOptions[3]">{{playerResult.countRank[3]}}</th>
+        <th *ngIf="rankOptions[4]">{{playerResult.countRank[4]}}</th>
+        <th *ngIf="rankOptions[5]">{{playerResult.countRank[5]}}</th>
+        <th *ngIf="rankOptions[6]">{{playerResult.countRank[6]}}</th>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

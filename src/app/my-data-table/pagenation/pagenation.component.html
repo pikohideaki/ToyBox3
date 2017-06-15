@@ -1,3 +1,37 @@
-<p>
-  pagenation works!
-</p>
+
+<div class='pagenation'>
+  <button md-raised-button class="navigationButton"
+      (click)='goToFirstPage()'
+      [disabled]='selectedPageIndex <= 0' >
+    <md-icon>first_page</md-icon>
+  </button>
+
+  <button md-raised-button class="navigationButton"
+      (click)='goToPreviousPage()'
+      [disabled]='selectedPageIndex <= 0' >
+    <md-icon>chevron_left</md-icon>
+  </button>
+
+  <md-button-toggle-group #group="mdButtonToggleGroup" > <!--[(ngModel)]="selectedPageIndex">-->
+    <md-button-toggle *ngFor='let page of getPages(); let pageIndex = index'
+        [value]="pageIndex"
+        [class.md-button-toggle-normal]="selectedPageIndex != pageIndex"
+        [class.md-button-toggle-selected]="selectedPageIndex == pageIndex"
+        (click)="setSelectedPageIndex(pageIndex)" >
+      <span>{{pageIndex + 1}}</span>
+    </md-button-toggle>
+  </md-button-toggle-group>
+
+  <button md-raised-button class="navigationButton"
+      (click)='goToNextPage()'
+      [disabled]='selectedPageIndex >= pageLength() - 1' >
+    <md-icon>chevron_right</md-icon>
+  </button>
+
+  <button md-raised-button class="navigationButton"
+      (click)='goToLastPage()'
+      [disabled]='selectedPageIndex >= pageLength() - 1' >
+    <md-icon>last_page</md-icon>
+  </button>
+</div>
+

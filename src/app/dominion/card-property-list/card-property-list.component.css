@@ -1,0 +1,16 @@
+.headerSortButton {
+  font-weight: 700;
+  font-size: 14px;
+  color: rgba(0,0,0,.54);
+  min-width: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+.sortIcon {
+  font-size: 24px;
+}
+
+
+.httpGetWaitingSpinner {
+    width:48px;
+}

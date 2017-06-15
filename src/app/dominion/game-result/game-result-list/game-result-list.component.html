@@ -1,3 +1,78 @@
-<p>
-  game-result-list works!
-</p>
+
+<my-data-table--items-per-page
+    [itemsPerPageDefault]='itemsPerPageDefault'
+    [itemsPerPageOptions]='itemsPerPageOptions'
+    [(itemsPerPage)]='itemsPerPage'
+    [(selectedPageIndex)]='selectedPageIndex' >
+</my-data-table--items-per-page>
+
+<my-data-table--pagenation
+    [(selectedPageIndex)]='selectedPageIndex'
+    [itemsPerPage]='itemsPerPage'
+    [dataSize]='GameResultListFiltered.length' >
+</my-data-table--pagenation>
+
+
+<span>{{GameResultListFiltered.length}} Games</span>
+<div class='clear'></div>
+
+
+<table class='my-data-table  my-data-table--shadow3px'>
+  <thead>
+    <tr>
+      <th>No.</th>
+      <th>日付</th>
+      <th>場所</th>
+      <th>スコア</th>
+      <th>メモ</th>
+      <!--<th></th>-->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor='let line of getDataForView()'>
+      <td class='my-data-table--cell-numeric'>{{line.no}}</td>
+      <td> {{line.date.getFullYear()}}/{{line.date.getMonth() + 1}}/{{line.date.getDate()}} </td>
+      <td> {{line.place}}</td>
+      <td>
+        <table class='my-data-table  sub-table' ><!--style='box-shadow: none'-->
+          <tbody>
+            <tr *ngFor='let playerResult of line.players'>
+              <td class='my-data-table--cell-numeric  sub-table--narrow-cell'>
+                {{playerResult.rank  }}
+              </td>
+              <td class='sub-table--normal-cell'>
+                {{playerResult.name  }}
+              </td>
+              <td class='my-data-table--cell-numeric  sub-table--narrow-cell'>
+                {{playerResult.VP}}{{(playerResult.lessTurns ? '*' : '')}}
+              </td>
+              <td class='my-data-table--cell-numeric  sub-table--narrow-cell'>
+                {{playerResult.score }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+      <td> {{line.memo   }}</td>
+      <td>
+        <!--<button md-raised-button color='primary' (click)='getDetail()'>Detail</button>-->
+        <!--<button md-raised-button color='warn' (click)='editGameResult()'>Edit</button>-->
+        <button md-raised-button color='warn' (click)='deleteGameResult( line.no )'>Delete</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<my-data-table--items-per-page
+    [itemsPerPageDefault]='itemsPerPageDefault'
+    [itemsPerPageOptions]='itemsPerPageOptions'
+    [(itemsPerPage)]='itemsPerPage'
+    [(selectedPageIndex)]='selectedPageIndex' >
+</my-data-table--items-per-page>
+
+<my-data-table--pagenation
+    [(selectedPageIndex)]='selectedPageIndex'
+    [itemsPerPage]='itemsPerPage'
+    [dataSize]='GameResultListFiltered.length' >
+</my-data-table--pagenation>

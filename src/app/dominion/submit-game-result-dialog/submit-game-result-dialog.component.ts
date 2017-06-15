@@ -1,15 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+
+import { MdDialogRef } from '@angular/material';
+
+import { MyUtilitiesService } from '../../my-utilities.service';
+
+import { MyFirebaseSubscribeService } from "../my-firebase-subscribe.service";
+import { GameResult } from "../game-result";
+import { CardProperty } from "../card-property";
+import { SelectedCards } from "../selected-cards";
 
 @Component({
+  providers: [ MyUtilitiesService, MyFirebaseSubscribeService ],
   selector: 'app-submit-game-result-dialog',
   templateUrl: './submit-game-result-dialog.component.html',
-  styleUrls: ['./submit-game-result-dialog.component.css']
+  styleUrls: [
+    '../../my-data-table/my-data-table.component.css',
+    './submit-game-result-dialog.component.css'
+  ]
 })
 export class SubmitGameResultDialogComponent implements OnInit {
 
-  constructor() { }
+  @Input() CardPropertyList: CardProperty[] = [];
+  @Input() DominionSetNameList: { name: string, selected: boolean }[] = [];
+  @Input() GameResultList: GameResult[] = [];
 
-  ngOnInit() {
+  @Input() newGameResult: GameResult;
+
+  constructor(
+    public dialogRef: MdDialogRef<SubmitGameResultDialogComponent>,
+    private utils: MyUtilitiesService,
+    private FDB: AngularFireDatabase,
+    private FDBservice: MyFirebaseSubscribeService
+  ) {
   }
 
+  ngOnInit() {
+    this.FDB.list( '/data/ScoringList' ).subscribe( val => {
+      let defaultScores = this.FDBservice.convertAs( val, "ScoringList" );
+      this.newGameResult.rankPlayers();
+      this.newGameResult.setScores( defaultScores );
+    } );
+  }
+
+
+  submitGameResult() {
+    this.FDB.list( '/data/GameResultList/' )
+      .update( `${this.GameResultList.length}`, this.newGameResult );
+  }
 }

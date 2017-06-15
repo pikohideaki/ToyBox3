@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+
+import { MyUtilitiesService } from '../../../my-utilities.service';
+import { CardProperty } from "../../card-property";
+import { SelectedCards } from "../../selected-cards";
+import { DominionCardImageComponent } from "../../dominion-card-image/dominion-card-image.component";
+
 
 @Component({
   selector: 'app-randomizer-card-image',
@@ -7,9 +13,29 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RandomizerCardImageComponent implements OnInit {
 
-  constructor() { }
+  @Input() longSideLength: number = 140;
+
+
+  @Input() SelectedCards: SelectedCards = new SelectedCards(); 
+
+  Platinum: { data: CardProperty, checked: boolean };
+  Colony  : { data: CardProperty, checked: boolean };
+
+
+  @Input() CardPropertyList: CardProperty[];
+
+  constructor(
+    private utils: MyUtilitiesService,
+  ) { }
 
   ngOnInit() {
+    this.Platinum = {
+      checked : false,
+      data  : this.CardPropertyList.find( e => e.card_ID === "Platinum" )
+    }
+    this.Colony = {
+      checked : false,
+      data  : this.CardPropertyList.find( e => e.card_ID === "Colony" )
+    }
   }
-
 }

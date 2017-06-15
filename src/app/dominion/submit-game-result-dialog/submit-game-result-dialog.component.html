@@ -1,3 +1,58 @@
-<p>
-  submit-game-result-dialog works!
-</p>
+
+<!--title-->
+<h1 md-dialog-title>結果</h1>
+
+<!--OK button-->
+<div md-dialog-content>
+  <p> 以下の内容で登録します。 </p>
+
+  <p>日付：
+      {{newGameResult.date.getFullYear()}}年
+      {{newGameResult.date.getMonth() + 1}}月
+      {{newGameResult.date.getDate()}}日</p>
+  <p>場所：{{newGameResult.place}}</p>
+  <div>
+    <table class='my-data-table my-data-table--shadow3px my-data-table--vertical-line'>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>VP</th>
+          <th>Score</th>
+          <th>同点手番勝ち</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let player of newGameResult.players">
+        <tr>
+          <td> {{player.rank}} </td>
+          <td> {{player.name}} </td>
+          <td> {{player.VP}} </td>
+          <td> {{player.score}} </td>
+          <td> <md-icon *ngIf="player.lessTurns">check</md-icon> </td>
+        </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+  <p> Memo : {{newGameResult.memo}} </p>
+</div>
+
+<!--OK button-->
+<div md-dialog-actions class='actionButtons'>
+  <span class="marginedElement">
+    <button md-raised-button
+      md-dialog-close="OK Clicked"
+      color='primary'
+      (click)="submitGameResult()">
+      OK
+    </button>
+  </span>
+  <span class="marginedElement">
+    <button md-raised-button
+      md-dialog-close="Cancel Clicked"
+      class="marginedElement" >
+      Cancel
+    </button>
+  </span>
+</div>

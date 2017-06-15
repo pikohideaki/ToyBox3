@@ -1,3 +1,13 @@
-<p>
-  items-per-page works!
-</p>
+<div class='itemsPerPage'>
+  <md-select
+      placeholder="items per page"
+      [(ngModel)]="itemsPerPage"
+    >
+    <md-option
+        *ngFor="let option of itemsPerPageOptions"
+        [value]="option"
+        (click)="setItemsPerPage( option )"
+      >{{ option }}
+    </md-option>
+  </md-select>
+</div>

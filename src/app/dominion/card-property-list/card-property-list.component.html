@@ -1,0 +1,12 @@
+
+<div class="bodyWithMargin">
+    <my-data-table
+        [data]='CardPropertyListForView'
+        [columnSettings]='columnSettings'
+        [itemsPerPageOptions]='itemsPerPageOptions'
+        [itemsPerPageDefault]='itemsPerPageDefault'
+        (onClick)='showDetail( $event.rowIndex )' >
+    </my-data-table>
+
+    <my-waiting-spinner *ngIf="!httpGetDone"></my-waiting-spinner>
+</div>

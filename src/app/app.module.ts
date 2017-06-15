@@ -23,6 +23,7 @@ import { environment               } from '../environments/environment';
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // MyServices
 import { MyUtilitiesService } from './my-utilities.service';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 // MyComponents
 import { AppComponent  } from './app.component';
@@ -40,7 +41,7 @@ import { AppListComponent          } from './app-list/app-list.component';
 // Dominion Apps
 import { DominionComponent               } from './dominion/dominion.component';
 import { CardPropertyDialogComponent     } from './dominion/card-property-dialog/card-property-dialog.component';
-import { CardListComponent               } from './dominion/card-list/card-list.component';
+import { CardPropertyListComponent       } from './dominion/card-property-list/card-property-list.component';
 import { DominionCardImageComponent      } from './dominion/dominion-card-image/dominion-card-image.component';
 import { GameResultComponent             } from './dominion/game-result/game-result.component';
 import { PlayersComponent                } from './dominion/players/players.component';
@@ -48,10 +49,13 @@ import { RandomizerComponent             } from './dominion/randomizer/randomize
 import { RuleBooksComponent              } from './dominion/rule-books/rule-books.component';
 import { SubmitGameResultDialogComponent } from './dominion/submit-game-result-dialog/submit-game-result-dialog.component';
 import { GameResultListComponent         } from './dominion/game-result/game-result-list/game-result-list.component';
-import { GameResutOfPlayerComponent      } from './dominion/game-result/game-resut-of-player/game-resut-of-player.component';
+import { GameResultOfPlayerComponent     } from './dominion/game-result/game-result-of-player/game-result-of-player.component';
 import { AddGameResultComponent          } from './dominion/randomizer/add-game-result/add-game-result.component';
 import { LocalGameGroupsComponent        } from './dominion/randomizer/local-game-groups/local-game-groups.component';
 import { RandomizerCardImageComponent    } from './dominion/randomizer/randomizer-card-image/randomizer-card-image.component';
+import { RandomizerSelectCardsComponent } from './dominion/randomizer/randomizer-select-cards/randomizer-select-cards.component';
+import { SyncGroupsComponent } from './dominion/randomizer/sync-groups/sync-groups.component';
+import { BlackMarketPileComponent } from './dominion/randomizer/black-market-pile/black-market-pile.component';
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,18 +73,22 @@ import { RandomizerCardImageComponent    } from './dominion/randomizer/randomize
     AppListComponent,
     DominionComponent,
     CardPropertyDialogComponent,
-    CardListComponent,
+    CardPropertyListComponent,
     DominionCardImageComponent,
     GameResultComponent,
     SubmitGameResultDialogComponent,
     GameResultListComponent,
-    GameResutOfPlayerComponent,
+    GameResultOfPlayerComponent,
     PlayersComponent,
     RandomizerComponent,
     AddGameResultComponent,
     LocalGameGroupsComponent,
     RandomizerCardImageComponent,
-    RuleBooksComponent
+    RuleBooksComponent,
+    ConfirmDialogComponent,
+    RandomizerSelectCardsComponent,
+    SyncGroupsComponent,
+    BlackMarketPileComponent
   ],
   imports: [
     BrowserModule,
@@ -91,7 +99,7 @@ import { RandomizerCardImageComponent    } from './dominion/randomizer/randomize
     RouterModule.forRoot( [
       { path: ''                   , component: HomeComponent       },
       { path: 'dominion'           , component: DominionComponent   },
-      { path: 'dominion/cardlist'  , component: CardListComponent   },
+      { path: 'dominion/cardlist'  , component: CardPropertyListComponent   },
       { path: 'dominion/rulebooks' , component: RuleBooksComponent  },
       { path: 'dominion/randomizer', component: RandomizerComponent },
       { path: 'dominion/gameresult', component: GameResultComponent },
@@ -105,8 +113,8 @@ import { RandomizerCardImageComponent    } from './dominion/randomizer/randomize
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
   ],
   providers: [
-    { provide: 'DATA_DIR', useValue: './data' },
-    { provide: 'DOMINION_DATA_DIR', useValue: './data/dominion' },
+    { provide: 'DATA_DIR', useValue: 'assets' },
+    { provide: 'DOMINION_DATA_DIR', useValue: 'assets' },
     { provide: 'HOST_NAME', useValue: 'http://dominion.piko-apps.info/' },
     { provide: 'FIREBASE_DATA_URL', useValue: 'https://dominionapps.firebaseio.com/data' },
     MyUtilitiesService,
@@ -115,6 +123,7 @@ import { RandomizerCardImageComponent    } from './dominion/randomizer/randomize
   entryComponents: [
       CardPropertyDialogComponent,
       SubmitGameResultDialogComponent,
+      ConfirmDialogComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,12 @@
+.dominionCard {
+  display: inline-block;
+  margin: 5px;
+}
+
+.buttonCard {
+  margin: 0;
+  padding: 0;
+}
+.buttonCard:hover {
+  cursor: pointer;
+}

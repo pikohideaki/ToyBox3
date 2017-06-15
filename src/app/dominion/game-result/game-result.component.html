@@ -1,3 +1,58 @@
-<p>
-  game-result works!
-</p>
+
+<div class="bodyWithMargin">
+
+
+  <!--<a class='floatButton'  [href]='GetGameResultListUrl' download="GameResultList.json">
+    <button md-raised-button>
+      <md-icon>file_download</md-icon>
+      Download GameResultList.json
+    </button>
+  </a>-->
+
+  <p>
+    <span class="filterTitle"> 期間： </span>
+    <md-input-container>
+      <input mdInput [mdDatepicker]="myDatepickerBegin" placeholder="日付" [(ngModel)]="dateBegin">
+      <button mdSuffix [mdDatepickerToggle]="myDatepickerBegin"></button>
+    </md-input-container>
+    <md-datepicker #myDatepickerBegin (selectedChanged)="filterGameResultList()"></md-datepicker>
+    ～
+    <md-input-container>
+      <input mdInput [mdDatepicker]="myDatepickerEnd" placeholder="日付" [(ngModel)]="dateEnd">
+      <button mdSuffix [mdDatepickerToggle]="myDatepickerEnd"></button>
+    </md-input-container>
+    <md-datepicker #myDatepickerEnd (selectedChanged)="filterGameResultList()"></md-datepicker>
+
+    <button md-raised-button (click)="filterGameResultList()"> OK </button>
+    <button md-raised-button class="latestResultButton" (click)="latestResult()"> 最新の結果 </button>
+  </p>
+
+
+  <button class='floatButton' md-raised-button (click)="resetFilter()">Reset All</button>
+
+
+  <p>
+    <span class="filterTitle">プレイヤー数：</span>
+    <ng-container *ngFor="let option of playerNumOptions">
+      <md-checkbox [(ngModel)]="option.selected" (change)="filterGameResultList()">
+          {{option.playerNum}}人
+      </md-checkbox>
+    </ng-container>
+  </p>
+
+  <md-tab-group *ngIf="httpGetDone">
+    <md-tab label="個人成績">
+      <game-result-of-player
+          [GameResultListFiltered]="GameResultListFiltered"
+          [playerNumOptions]="playerNumOptions">
+      </game-result-of-player>
+    </md-tab>
+    <md-tab label="総合成績">
+      <game-result-list [GameResultListFiltered]="GameResultListFiltered">
+      </game-result-list>
+    </md-tab>
+  </md-tab-group>
+
+  <my-waiting-spinner *ngIf="!httpGetDone"></my-waiting-spinner>
+</div>
+

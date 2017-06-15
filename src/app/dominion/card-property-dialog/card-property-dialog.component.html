@@ -1,3 +1,75 @@
-<p>
-  card-property-dialog works!
-</p>
+
+<h1 md-dialog-title>{{card.name_jp}} ({{card.name_eng}})</h1>
+<div md-dialog-content>
+  <div class="description">
+    <ul>
+      <li> 【Card No.】
+        {{card.no                      }}
+      </li>
+      <li> 【和名（よみ）】
+        {{card.name_jp                 }}（{{card.name_jp_yomi}}）
+      </li>
+      <li> 【英名】
+        {{card.name_eng                }}
+      </li>
+      <li> 【セット】
+        {{card.set_name                }}
+      </li>
+      <li> 【コスト（コイン）】
+        {{card.cost_coin               }}
+      </li>
+      <li> 【コスト（ポーション）】
+        {{card.cost_potion             }}
+      </li>
+      <li> 【コスト（借金）】
+        {{card.cost_debt               }}
+      </li>
+      <li> 【種類】
+        {{card.category                }}
+      </li>
+      <li> 【属性】
+        {{card.card_type               }}
+      </li>
+      <li> 【VP】
+        {{card.VP                      }}
+      </li>
+      <li> 【+Draw Cards】
+        {{card.draw_card               }}
+      </li>
+      <li> 【+Action】
+        {{card.action                  }}
+      </li>
+      <li> 【+Buy】
+        {{card.buy                     }}
+      </li>
+      <li> 【+Coin】
+        {{card.coin                    }}
+      </li>
+      <li> 【+VP-token】
+        {{card.VPtoken                 }}
+      </li>
+      <li> 【効果】
+        {{card.effect                  }}
+      </li>
+      <li> 【説明】
+        {{card.description             }}
+      </li>
+      <li> 【推奨の組み合わせ】
+        {{card.recommended_combination }}
+      </li>
+      <li> 【メモ】
+        {{card.memo                    }}
+      </li>
+      <li> 【オンラインゲーム実装状況】
+        {{card.implemented}}
+      </li>
+    </ul>
+  </div>
+  <div class="image">
+    <dominion-card-image [card]='card' [faceUp]='faceUp' [width]='width'></dominion-card-image>
+  </div>
+</div>
+
+<div md-dialog-actions class='actionButtons'>
+    <button md-raised-button color='primary' class='actionButton' (click)="dialogRef.close()">OK</button>
+</div>

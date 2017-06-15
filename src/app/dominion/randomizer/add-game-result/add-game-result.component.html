@@ -1,3 +1,91 @@
-<p>
-  add-game-result works!
-</p>
+
+<div class='bodyWithMargin'>
+
+  <!--日付-->
+  <span class="marginedElement">
+    <md-input-container>
+      <input mdInput [mdDatepicker]="myDatepicker" [(ngModel)]="date" placeholder="日付" >
+      <button mdSuffix [mdDatepickerToggle]="myDatepicker"></button>
+    </md-input-container>
+    <md-datepicker #myDatepicker></md-datepicker>
+  </span>
+
+  <!--場所-->
+  <span class="marginedElement">
+    <md-input-container>
+      <input mdInput
+        placeholder="場所"
+        [(ngModel)]="place"
+        [mdAutocomplete]="auto"
+        [formControl]="stateCtrl">
+    </md-input-container>
+    <md-autocomplete #auto="mdAutocomplete">
+      <md-option *ngFor="let place of filteredPlaces | async" [value]="place">
+        {{ place }}
+      </md-option>
+    </md-autocomplete>
+  </span>
+
+
+
+  <!--プレイヤー-->
+  <div class="marginedElement">
+    <p>参加者を選択（2~4人）：</p>
+    <my-waiting-spinner *ngIf="!httpGetAllDone()"></my-waiting-spinner>
+
+    <div *ngIf="httpGetAllDone()">
+      <ng-container *ngFor="let player of Players" >
+        <md-checkbox class="playerChbox" [(ngModel)]="player.selected" >
+          {{player.name}}
+        </md-checkbox>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="marginedElement">
+    <md-radio-group [(ngModel)]="startPlayerName" >
+    <table class='my-data-table my-data-table--shadow3px my-data-table--vertical-line'>
+      <thead>
+        <tr>
+          <th><button md-button (click)="selectStartPlayer()">Start Player</button></th>
+          <th>Name</th>
+          <th>VP</th>
+          <th>同点手番勝ち</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let player of Players">
+        <tr *ngIf="player.selected">
+          <td>
+            <md-radio-button [value]="player.name" ></md-radio-button>
+          </td>
+          <td>{{player.name}}</td>
+          <td>
+            <md-input-container >
+              <input mdInput type="number" [(ngModel)]="player.VP" >
+            </md-input-container>
+          </td>
+          <td>
+            <md-checkbox [(ngModel)]="player.lessTurns"></md-checkbox>
+          </td>
+        </tr>
+        </ng-container>
+      </tbody>
+    </table>
+    </md-radio-group>
+  </div>
+
+
+  <!--メモ-->
+  <md-input-container>
+    <textarea  mdInput placeholder="Memo"  [(ngModel)]="memo" ></textarea>
+  </md-input-container>
+
+
+  <!--登録ボタン-->
+  <div class="marginedElement">
+    <button md-raised-button color='primary' (click)='submitGameResult()'>Submit</button>
+    <span *ngIf="!playerNumAlert()">プレイヤーを2~4人選択してください！</span>
+  </div>
+
+</div>

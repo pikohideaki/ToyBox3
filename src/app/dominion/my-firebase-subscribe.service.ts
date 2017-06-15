@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+// import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 import { CardProperty } from "./card-property";
 import { GameResult } from "./game-result";
@@ -9,10 +9,10 @@ import { PlayerName } from "./player-name";
 @Injectable()
 export class MyFirebaseSubscribeService {
 
-  constructor() { }
+  constructor( ) { }
 
 
-  convertAs( val: any, targetname: string ) {
+  convertAs( val: any, targetname: string, ScoringList?: number[][] ) {
     let result = [];
 
     switch (targetname) {
@@ -28,6 +28,8 @@ export class MyFirebaseSubscribeService {
 
       case "GameResultList":
         val.forEach( e => result.push( new GameResult(e) ) );
+        let no = 1;
+        result.forEach( gr => { gr.setScores( ScoringList ); gr.no = no++; } );
         console.log( "convertAs GameResultList done. " );
         return result;
 
@@ -37,7 +39,7 @@ export class MyFirebaseSubscribeService {
         return result;
 
       case "ScoringList":
-        val.forEach( e => result.push( new Array(e) ) );
+        val.forEach( e => result.push( Array.from(e) ) );
         console.log( "convertAs ScoringList done. " );
         return result;
 

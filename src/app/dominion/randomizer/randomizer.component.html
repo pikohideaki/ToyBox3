@@ -1,3 +1,59 @@
-<p>
-  randomizer works!
-</p>
+
+<md-sidenav-container class="sidenavContainer">
+  <md-sidenav #sidenav class="sidenav" ><!--*ngIf="httpGetAllDone()">-->
+    <button md-button color="primary" (click)="sidenav.close()">
+      <md-icon>close</md-icon>
+    </button>
+    <app-sync-groups
+        [SelectedCards]="SelectedCards"
+        [newGameResult]="newGameResult"
+        [(syncGroups)]="syncGroups">
+    </app-sync-groups>
+  </md-sidenav>
+
+
+  <div class="sidenavMain">
+    <button md-button (click)="sidenav.open()">
+      <md-icon>group</md-icon>
+    </button>
+
+    <md-tab-group>
+      <md-tab label="Randomizer">
+        <div class="bodyWithMargin">
+
+          <my-waiting-spinner *ngIf="!httpGetAllDone()"></my-waiting-spinner>
+
+          <!--使用する拡張セットにチェック-->
+          <app-randomizer-select-cards *ngIf="httpGetAllDone()"
+              [CardPropertyList]="CardPropertyList"
+              [DominionSetNameList]="DominionSetNameList"
+              [(SelectedCards)]="SelectedCards">
+          </app-randomizer-select-cards>
+        </div>
+
+        <hr>
+
+        <app-randomizer-card-image
+          *ngIf="httpGetAllDone()"
+          longSideLength="140"
+          [SelectedCards]="SelectedCards"
+          [CardPropertyList]="CardPropertyList">
+        </app-randomizer-card-image>
+      </md-tab>
+
+      <md-tab *ngIf="SelectedCards.BlackMarketPile.length > 0" label="闇市場デッキ">
+        <app-black-market-pile>
+        </app-black-market-pile>
+      </md-tab>
+      <md-tab label="結果入力">
+        <app-add-game-result
+          [SelectedCards]="SelectedCards"
+          [DominionSetNameList]="DominionSetNameList"
+          [CardPropertyList]="CardPropertyList"
+          [(newGameResult)]="newGameResult">
+        </app-add-game-result>
+      </md-tab>
+    </md-tab-group>
+
+  </div>
+</md-sidenav-container>

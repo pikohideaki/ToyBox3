@@ -1,0 +1,23 @@
+
+.pagenation {
+  padding: 20px;
+  display: inline-block;
+}
+
+.md-button-toggle-normal {
+  background: white;
+  color: rgba(0,0,0,.54);
+  border-right: 1px solid rgba(0,0,0,.06);
+}
+.md-button-toggle-selected {
+  background: blue;
+  color: white;
+  border-right: 1px solid rgba(0,0,0,.06);
+}
+
+.navigationButton {
+  padding : 0;
+  min-width : 0;
+  width: 35px;
+  color: rgba(0,0,0,.54);
+}

@@ -1,3 +1,18 @@
-<p>
-  dominion-card-image works!
-</p>
+
+<div *ngIf="!isButton"
+      class='dominionCard'
+      [class.faceUp]="faceUp"
+      [class.faceDown]="!faceUp" >
+  <img [src]="sourceDir()" alt="Card Image" [width]='width' [height]='height'>
+</div>
+
+
+<div *ngIf="isButton"
+      class='dominionCard buttonCard'
+      [class.faceUp]="faceUp"
+      [class.faceDown]="!faceUp" >
+  <button class="buttonCard">
+    <img [src]="sourceDir()" alt="Card Image" [width]='width' [height]='height'>
+  </button>
+</div>
+

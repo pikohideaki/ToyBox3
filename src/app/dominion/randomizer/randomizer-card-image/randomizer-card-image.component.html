@@ -1,3 +1,69 @@
-<p>
-  randomizer-card-image works!
-</p>
+
+<div class="CardArea" id="KingdomCards10" *ngIf="SelectedCards.KingdomCards10.length > 0">
+  <ng-container *ngFor="let card of SelectedCards.KingdomCards10" >
+    <dominion-card-image
+      [class.checked]="card.checked"
+      [card]='CardPropertyList[card.index]' faceUp='true' [width]='longSideLength'>
+    </dominion-card-image>
+  </ng-container>
+</div>
+
+
+<!--
+<div class="CardArea" id="Prosperity"  *ngIf="SelectedCards.Prosperity">
+  <dominion-card-image
+    [class.checked]="Platinum.checked"
+    card='Platinum.data' faceUp='true' [width]='longSideLength'>
+  </dominion-card-image>
+  <dominion-card-image
+    [class.checked]="Colony.checked"
+    card='Colony.data' faceUp='true' [width]='longSideLength'>
+  </dominion-card-image>
+</div>
+-->
+
+
+<div class="CardArea" id="BaneCard__Obelisk"
+    *ngIf="SelectedCards.BaneCard.length + SelectedCards.Obelisk.length > 0">
+  <ng-container *ngFor="let card of SelectedCards.BaneCard" >
+    <dominion-card-image
+      [class.checked]="card.checked"
+      [card]='CardPropertyList[card.index]' faceUp='true' [width]='longSideLength'>
+    </dominion-card-image>
+  </ng-container>
+
+  <ng-container *ngFor="let card of SelectedCards.Obelisk" >
+    <dominion-card-image
+      [class.checked]="card.checked"
+      [card]='CardPropertyList[card.index]' faceUp='true' [width]='longSideLength'>
+    </dominion-card-image>
+  </ng-container>
+</div>
+
+
+<div class="CardArea" id="EventCards__LandmarkCards"
+    *ngIf="SelectedCards.EventCards.length + SelectedCards.LandmarkCards.length > 0">
+  <ng-container *ngFor="let card of SelectedCards.EventCards" >
+    <dominion-card-image
+      [class.checked]="card.checked"
+      [card]='CardPropertyList[card.index]' faceUp='true' [height]='longSideLength'>
+    </dominion-card-image>
+  </ng-container>
+
+  <ng-container *ngFor="let card of SelectedCards.LandmarkCards" >
+    <dominion-card-image
+      [class.checked]="card.checked"
+      [card]='CardPropertyList[card.index]' faceUp='true' [height]='longSideLength'>
+    </dominion-card-image>
+  </ng-container>
+</div>
+
+
+<div class="CardArea" id="BlackMarketPile" *ngIf="SelectedCards.BlackMarketPile.length > 0">
+  <ng-container *ngFor="let card of SelectedCards.BlackMarketPile" >
+    <dominion-card-image
+      [class.checked]="card.checked"
+      [card]='CardPropertyList[card.index]' faceUp='true' [width]='longSideLength'>
+    </dominion-card-image>
+  </ng-container>
+</div>

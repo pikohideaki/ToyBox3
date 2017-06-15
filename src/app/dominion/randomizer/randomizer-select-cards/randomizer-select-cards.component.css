@@ -1,0 +1,19 @@
+
+.Prosperity_DarkAges {
+  margin: 10px;
+}
+
+#Prosperity,
+#DarkAges {
+  margin: 10px;
+}
+
+#randomizerOptions,
+#supplyTable {
+  float: left;
+  margin: 20px;
+}
+
+.clear {
+  clear: left;
+}
