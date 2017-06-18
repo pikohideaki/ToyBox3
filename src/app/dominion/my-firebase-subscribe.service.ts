@@ -44,9 +44,19 @@ export class MyFirebaseSubscribeService {
         console.log( "convertAs ScoringList done. " );
         return result;
 
+      case "users" :
+        // val.forEach( e => result.push( { name: e.name, groupID: e.groupID } ) );
+        val.forEach( e => result.push(
+          {
+            id: e.key,
+            data: { name: e.val().name,  groupID: e.val().groupID }
+          } ) );
+        console.log( "convertAs users done. " );
+        return result;
+
       case "syncGroups":
         // val.forEach( e => result.push( new SyncGroup(e) ) );
-        val.forEach( e => result.push( new SyncGroup(e) ) );
+        val.forEach( e => result.push( { id: e.key, selected: false, data: new SyncGroup( e.val() ) } ) );
         console.log( "convertAs syncGroups done. " );
         return result;
 

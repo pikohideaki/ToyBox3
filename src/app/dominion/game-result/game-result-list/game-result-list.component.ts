@@ -47,7 +47,7 @@ export class GameResultListComponent implements OnInit, OnChanges {
   constructor(
     public dialog: MdDialog,
     public snackBar: MdSnackBar,
-    private FDB: AngularFireDatabase
+    private afDatabase: AngularFireDatabase
   ) {}
 
   ngOnInit() {
@@ -79,7 +79,7 @@ export class GameResultListComponent implements OnInit, OnChanges {
     dialogRef.componentInstance.message = `No.${no} を削除してもよろしいですか？`;
     dialogRef.afterClosed().subscribe( answer => {
       if ( answer === "yes" ) {
-        this.FDB.list( `/data/GameResultList/${no - 1}` ).remove();
+        this.afDatabase.list( `/data/GameResultList/${no - 1}` ).remove();
         this.openSnackBar();
       }
     });

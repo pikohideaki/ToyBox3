@@ -1,11 +1,11 @@
 <div id="randomizerOptions">
   <div>
-    <md-slide-toggle [(ngModel)]="AllSetsSelected"  (change)="selectAllToggle( $event )">
+    <md-slide-toggle [(ngModel)]="AllSetsSelected"  (change)="selectAllToggle()">
       <b>全選択</b>
     </md-slide-toggle>
   </div>
-  <div *ngFor="let DominionSet of DominionSetNameList" >
-    <md-slide-toggle [(ngModel)]="DominionSet.selected">
+  <div *ngFor="let DominionSet of DominionSetList" >
+    <md-slide-toggle [(ngModel)]="DominionSet.selected" (change)="DominionSetListOnChange()">
       {{DominionSet.name}}
     </md-slide-toggle>
   </div>
@@ -29,12 +29,14 @@
   <div class="Prosperity_DarkAges">
     <span id="Prosperity" *ngIf="SelectedCards.KingdomCards10.length > 0">
       <md-slide-toggle [(ngModel)]="SelectedCards.Prosperity">
+          <!--(change)="SelectedCardsOnChange()">-->
         植民地場
       </md-slide-toggle>
     </span>
 
     <span id="DarkAges"   *ngIf="SelectedCards.KingdomCards10.length > 0">
       <md-slide-toggle [(ngModel)]="SelectedCards.DarkAges">
+          <!--(change)="SelectedCardsOnChange()">-->
         避難所場
       </md-slide-toggle>
     </span>
@@ -43,6 +45,7 @@
   <table class='my-data-table my-data-table--shadow3px my-data-table--vertical-line'>
     <thead>
       <tr *ngIf="SelectedCards.KingdomCards10.length > 0">
+        <th></th>
         <th>セット</th>
         <th>名前</th>
         <th>name</th>
@@ -52,6 +55,7 @@
 
     <tbody>
       <tr *ngFor="let card of SelectedCards.KingdomCards10">
+        <td> <md-checkbox></md-checkbox> </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>
@@ -61,11 +65,12 @@
 
     <thead>
       <tr *ngIf="SelectedCards.BaneCard.length > 0">
-        <th colspan="4">災いカード（魔女娘用）</th>
+        <th colspan="5">災いカード（魔女娘用）</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let card of SelectedCards.BaneCard">
+        <td> <md-checkbox></md-checkbox> </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>
@@ -75,11 +80,12 @@
 
     <thead>
       <tr *ngIf="SelectedCards.EventCards.length > 0">
-        <th colspan="4">Event</th>
+        <th colspan="5">Event</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let card of SelectedCards.EventCards">
+        <td> <md-checkbox></md-checkbox> </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>
@@ -89,11 +95,12 @@
 
     <thead>
       <tr *ngIf="SelectedCards.LandmarkCards.length > 0">
-        <th colspan="4">LandmarkCards</th>
+        <th colspan="5">LandmarkCards</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let card of SelectedCards.LandmarkCards">
+        <td> <md-checkbox></md-checkbox> </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>
@@ -103,11 +110,12 @@
 
     <thead>
       <tr *ngIf="SelectedCards.Obelisk.length > 0">
-        <th colspan="4">Obelisk 指定カード</th>
+        <th colspan="5">Obelisk 指定カード</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let card of SelectedCards.Obelisk">
+        <td> <md-checkbox></md-checkbox> </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>
@@ -117,11 +125,12 @@
 
     <thead>
       <tr *ngIf="SelectedCards.BlackMarketPile.length > 0">
-        <th colspan="4">闇市場デッキ</th>
+        <th colspan="5">闇市場デッキ</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let card of SelectedCards.BlackMarketPile">
+        <td> <md-checkbox></md-checkbox> </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>

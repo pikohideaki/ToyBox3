@@ -22,3 +22,7 @@ body {
 .marginedElement {
     margin: 10px;
 }
+
+.alert {
+  color: red;
+}

@@ -16,14 +16,14 @@ import { PlayerName } from "./player-name";
 })
 export class DominionComponent implements OnInit {
 
-  dominionApps: {address: string, inService: boolean, title: string, subtitle: string}[] = [
-    { address: "/dominion"           , inService: false, title: "Online Game"     , subtitle: "Dominion オンライン対戦", },
-    { address: "/dominion/randomizer", inService: true , title: "Randomizer"      , subtitle: "サプライ生成＆ゲーム結果追加", },
-    { address: "/dominion/gameresult", inService: true , title: "Game Result List", subtitle: "成績表", },
-    { address: "/dominion/cardlist"  , inService: true , title: "Card List"       , subtitle: "カード一覧表", },
-    { address: "/dominion/rulebooks" , inService: true , title: "RuleBooks"       , subtitle: "Dominionのルールブック(PDF)", },
-    { address: "/dominion/players"   , inService: true , title: "Players"         , subtitle: "プレイヤー一覧", },
-    { address: "/dominion"           , inService: false, title: "Scoring"         , subtitle: "成績表でのスコアのつけ方を設定", },
+  dominionApps: {routerLink: string, inService: boolean, title: string, subtitle: string}[] = [
+    { routerLink: "/dominion"           , inService: false, title: "Online Game"     , subtitle: "Dominion オンライン対戦", },
+    { routerLink: "/dominion/randomizer", inService: true , title: "Randomizer"      , subtitle: "サプライ生成＆ゲーム結果追加", },
+    { routerLink: "/dominion/gameresult", inService: true , title: "Game Result List", subtitle: "成績表", },
+    { routerLink: "/dominion/cardlist"  , inService: true , title: "Card List"       , subtitle: "カード一覧表", },
+    { routerLink: "/dominion/rulebooks" , inService: true , title: "RuleBooks"       , subtitle: "Dominionのルールブック(PDF)", },
+    { routerLink: "/dominion/players"   , inService: true , title: "Players"         , subtitle: "プレイヤー一覧", },
+    { routerLink: "/dominion/scoring"   , inService: true , title: "Scoring"         , subtitle: "成績表でのスコアのつけ方", },
   ];
 
   // CardPropertyList    : CardProperty[] = [];
@@ -32,34 +32,32 @@ export class DominionComponent implements OnInit {
   // PlayersNameList     : PlayerName[] = [];
   // ScoringList         : number[][] = [];
 
-
   constructor(
-    // FDB: AngularFireDatabase,
-    // private FDBservice: MyFirebaseSubscribeService
+  //   afDatabase: AngularFireDatabase,
+  //   private afDatabaseService: MyFirebaseSubscribeService
   ) {
-    // FDB.list( '/data/CardPropertyList' ).subscribe( val => {
-    //   this.CardPropertyList = this.FDBservice.convertAs( val, "CardPropertyList" );
-    // } );
+  //   afDatabase.list( '/data/CardPropertyList' ).subscribe( val => {
+  //     this.CardPropertyList = this.afDatabaseService.convertAs( val, "CardPropertyList" );
+  //   } );
 
-    // FDB.list( '/data/DominionSetNameList' ).subscribe( val => {
-    //   this.DominionSetNameList = this.FDBservice.convertAs( val, "DominionSetNameList" );
-    // } );
+  //   afDatabase.list( '/data/DominionSetNameList' ).subscribe( val => {
+  //     this.DominionSetNameList = this.afDatabaseService.convertAs( val, "DominionSetNameList" );
+  //   } );
 
-    // FDB.list( '/data/ScoringList' ).subscribe( val => {
-    //   this.ScoringList = this.FDBservice.convertAs( val, "ScoringList" );
-    //   FDB.list( '/data/GameResultList' ).subscribe( val => {
-    //     this.GameResultList = this.FDBservice.convertAs( val, "GameResultList", this.ScoringList );
-    //   } );
-    // } );
+  //   afDatabase.list( '/data/ScoringList' ).subscribe( val => {
+  //     this.ScoringList = this.afDatabaseService.convertAs( val, "ScoringList" );
+  //     afDatabase.list( '/data/GameResultList' ).subscribe( val => {
+  //       this.GameResultList = this.afDatabaseService.convertAs( val, "GameResultList", this.ScoringList );
+  //     } );
+  //   } );
 
-    // FDB.list( '/data/PlayersNameList' ).subscribe( val => {
-    //   this.PlayersNameList = this.FDBservice.convertAs( val, "PlayersNameList" );
-    // } );
+  //   afDatabase.list( '/data/PlayersNameList' ).subscribe( val => {
+  //     this.PlayersNameList = this.afDatabaseService.convertAs( val, "PlayersNameList" );
+  //   } );
   }
 
   ngOnInit() {
-    // this.httpServicePlayers.GetPlayersNameList()
-    // .then( data => console.log(data) );
   }
+
 
 }

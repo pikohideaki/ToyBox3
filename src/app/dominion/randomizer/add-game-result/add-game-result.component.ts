@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
@@ -25,9 +25,9 @@ import { CardProperty } from "../../card-property";
     './add-game-result.component.css'
   ]
 })
-export class AddGameResultComponent implements OnInit {
+export class AddGameResultComponent implements OnInit, OnChanges {
 
-  httpGetDone: number = 0;
+  httpGetDone: boolean[] = [false, false];
 
 
   date: Date;
@@ -39,7 +39,6 @@ export class AddGameResultComponent implements OnInit {
 
   GameResultList: GameResult[] = [];
 
-  PlayersNameList: { name: string, name_yomi: string }[] = [];
   Players: {
       name      : string,
       selected  : boolean,
@@ -51,10 +50,12 @@ export class AddGameResultComponent implements OnInit {
   memo: string = "";
 
 
-  @Input() DominionSetNameList: { name: string, selected: boolean }[] = [];
+  @Input() DominionSetList: { name: string, selected: boolean }[] = [];
   @Input() CardPropertyList: CardProperty[];
 
   @Input() SelectedCards: SelectedCards = new SelectedCards();
+  @Input() PlayersNameList: PlayerName[] = [];
+
 
   @Input() newGameResult: GameResult;
   // @Output() newGameResultChange = new EventEmitter<GameResult>();
@@ -64,18 +65,19 @@ export class AddGameResultComponent implements OnInit {
     private utils: MyUtilitiesService,
     public dialog: MdDialog,
     public snackBar: MdSnackBar,
-    FDB: AngularFireDatabase,
-    private FDBservice: MyFirebaseSubscribeService
+    afDatabase: AngularFireDatabase,
+    private afDatabaseService: MyFirebaseSubscribeService
   ) {
     this.date = new Date( Date.now() );
 
     this.stateCtrl = new FormControl();
 
-    FDB.list( '/data/ScoringList' ).subscribe( val => {
-      let ScoringList = this.FDBservice.convertAs( val, "ScoringList" );
-      FDB.list( '/data/GameResultList' ).subscribe( val => {
-        this.httpGetDone++;
-        this.GameResultList = this.FDBservice.convertAs( val, "GameResultList", ScoringList );
+    afDatabase.list( '/data/ScoringList' ).subscribe( val => {
+      this.httpGetDone[0] = true;
+      let ScoringList = this.afDatabaseService.convertAs( val, "ScoringList" );
+      afDatabase.list( '/data/GameResultList' ).subscribe( val => {
+        this.httpGetDone[1] = true;
+        this.GameResultList = this.afDatabaseService.convertAs( val, "GameResultList", ScoringList );
         this.places = this.utils.uniq( this.GameResultList.map( e => e.place ) )
                                 .filter( e => e != "" );
 
@@ -85,25 +87,26 @@ export class AddGameResultComponent implements OnInit {
       } );
     } );
 
-    FDB.list( '/data/PlayersNameList' ).subscribe( val => {
-      this.httpGetDone++;
-      this.PlayersNameList = this.FDBservice.convertAs( val, "PlayersNameList" );
-      this.Players = this.PlayersNameList.map( player => {
-          return {
-            name      : player.name,
-            selected  : false,
-            VP        : 0,
-            lessTurns : false,
-          } } );
-    } );
   }
 
   ngOnInit() {
   }
+  
+  ngOnChanges( changes: SimpleChanges ) {
+    if ( changes.PlayersNameList != undefined ) {  // at http-get done
+      this.Players = this.PlayersNameList.map( player => {
+        return {
+          name      : player.name,
+          selected  : false,
+          VP        : 0,
+          lessTurns : false,
+        } } );
+    }
+  }
 
 
   httpGetAllDone() : boolean {
-    return this.httpGetDone >= 2;
+    return this.httpGetDone.every( e => e === true );
   }
 
   filterPlaces( val: string ): string[] {
@@ -140,7 +143,7 @@ export class AddGameResultComponent implements OnInit {
       date   : this.date,
       place  : this.place,
       memo   : this.memo,
-      selectedDominionSets : this.DominionSetNameList.map( e => e.selected ),
+      selectedDominionSets : this.DominionSetList.map( e => e.selected ),
       usedCardIDs      : {
         Prosperity      : this.SelectedCards.Prosperity,
         DarkAges        : this.SelectedCards.DarkAges,
@@ -173,7 +176,7 @@ export class AddGameResultComponent implements OnInit {
     dialogRef.componentInstance.GameResultList   = this.GameResultList;
     dialogRef.componentInstance.CardPropertyList = this.CardPropertyList;
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe( result => {
       if ( result == "OK Clicked" ) {
         this.Players.forEach( pl => {
           pl.lessTurns = false;

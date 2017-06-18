@@ -1,0 +1,33 @@
+
+<div> user ID {{ (user | async)?.uid }} </div>
+<div> name {{ (user | async)?.displayName }} </div>
+<div> email {{ (user | async)?.email }} </div>
+
+<md-input-container [color]="( errorMessageForEmail !== '' ? 'primary' : 'warn' )">
+  <input mdInput [(ngModel)]="email" placeholder="E-mail" required>
+  <md-hint *ngIf="errorMessageForEmail !== '' " class="alert">
+    {{errorMessageForEmail}}
+  </md-hint>
+</md-input-container>
+
+<md-input-container [color]="( errorMessageForPassword !== '' ? 'primary' : 'warn' )">
+  <input mdInput [(ngModel)]="password" placeholder="Password" required>
+  <md-hint *ngIf="errorMessageForPassword !== '' " class="alert">
+    {{errorMessageForPassword}}
+  </md-hint>
+</md-input-container>
+
+<md-input-container>
+  <input mdInput [(ngModel)]="displayName" placeholder="name" required>
+</md-input-container>
+
+<button md-raised-button (click)="signUp()"
+    [disabled]="!email || !password || !displayName " >
+  Sign Up
+</button>
+
+
+<button md-button (click)="login()">Login</button>
+<button md-button (click)="loginWithGoogle()">Login with Google</button>
+<button md-button (click)="logout()">Logout</button>
+<button md-button (click)="setDisplayName()">set name</button>

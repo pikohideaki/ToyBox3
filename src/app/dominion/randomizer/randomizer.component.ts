@@ -6,6 +6,7 @@ import { MyFirebaseSubscribeService } from "../my-firebase-subscribe.service";
 
 import { CardProperty } from "../card-property";
 import { GameResult } from "../game-result";
+import { PlayerName } from "../player-name";
 import { SelectedCards } from "../selected-cards";
 import { SyncGroup } from "./sync-group";
 
@@ -18,52 +19,50 @@ import { SyncGroup } from "./sync-group";
 })
 export class RandomizerComponent implements OnInit {
 
-  httpGetDone: number = 0;
+  httpGetDone: boolean[] = [false,false];
 
-  DominionSetNameList: { name: string, selected: boolean }[] = [];
+  DominionSetList: { name: string, selected: boolean }[] = [];
   CardPropertyList: CardProperty[] = [];
+  PlayersNameList: PlayerName[] = [];
 
   SelectedCards: SelectedCards = new SelectedCards();
   newGameResult: GameResult;
 
-  syncGroups: SyncGroup[];
-
+  myUserID: string;
 
   constructor(
     private utils: MyUtilitiesService,
-    FDB: AngularFireDatabase,
-    private FDBservice: MyFirebaseSubscribeService
+    afDatabase: AngularFireDatabase,
+    private afDatabaseService: MyFirebaseSubscribeService
   ) {
 
-    // get sync groups
-    FDB.list( "/syncGroups" ).subscribe( val => {
-      this.httpGetDone++;
-      // this.syncGroups = val.map( e => )
-    });
+    afDatabase.list( '/data/PlayersNameList' ).subscribe( val => {
+      this.PlayersNameList = this.afDatabaseService.convertAs( val, "PlayersNameList" );
+    } );
 
-    FDB.list( '/data/DominionSetNameList' ).subscribe( val => {
-      this.httpGetDone++;
-      this.DominionSetNameList
-        = this.FDBservice.convertAs( val, "DominionSetNameList" )
+    afDatabase.list( '/data/DominionSetNameList' ).subscribe( val => {
+      this.httpGetDone[0] = true;
+      this.DominionSetList
+        = this.afDatabaseService.convertAs( val, "DominionSetNameList" )
                 .map( e => { return { name: e, selected: true } } );
 
       if ( this.utils.localStorage_has('DominionSetNameList') ) {
         let ls = this.utils.localStorage_get('DominionSetNameList');
-        this.DominionSetNameList.forEach( elm => {
+        this.DominionSetList.forEach( elm => {
           let localValue = ls.find( e => e.name == elm.name );
           if ( localValue ) { elm.selected = localValue.selected; }
         })
       }
     });
 
-    FDB.list( '/data/CardPropertyList' ).subscribe( val => {
-      this.httpGetDone++;
-      this.CardPropertyList = this.FDBservice.convertAs( val, "CardPropertyList" );
+    afDatabase.list( '/data/CardPropertyList' ).subscribe( val => {
+      this.httpGetDone[1] = true;
+      this.CardPropertyList = this.afDatabaseService.convertAs( val, "CardPropertyList" );
     });
   }
 
   httpGetAllDone() : boolean {
-    return this.httpGetDone >= 3;
+    return this.httpGetDone.every( e => e === true );
   }
 
   ngOnInit() {

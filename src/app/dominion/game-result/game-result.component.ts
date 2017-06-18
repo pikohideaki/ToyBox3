@@ -30,17 +30,17 @@ export class GameResultComponent implements OnInit {
 
   constructor(
     private utils: MyUtilitiesService,
-    FDB: AngularFireDatabase,
-    private FDBservice: MyFirebaseSubscribeService
+    afDatabase: AngularFireDatabase,
+    private afDatabaseService: MyFirebaseSubscribeService
   ) {
     this.dateBegin = new Date();
     this.dateEnd   = new Date();
 
-    FDB.list( '/data/ScoringList' ).subscribe( val => {
-      let ScoringList = this.FDBservice.convertAs( val, "ScoringList" );
+    afDatabase.list( '/data/ScoringList' ).subscribe( val => {
+      let ScoringList = this.afDatabaseService.convertAs( val, "ScoringList" );
 
-      FDB.list( '/data/GameResultList' ).subscribe( val => {
-        this.GameResultList = this.FDBservice.convertAs( val, "GameResultList", ScoringList );
+      afDatabase.list( '/data/GameResultList' ).subscribe( val => {
+        this.GameResultList = this.afDatabaseService.convertAs( val, "GameResultList", ScoringList );
 
         this.httpGetDone = true;
         this.playerNumOptions

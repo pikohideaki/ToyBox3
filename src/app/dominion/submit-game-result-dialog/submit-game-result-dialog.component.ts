@@ -30,14 +30,14 @@ export class SubmitGameResultDialogComponent implements OnInit {
   constructor(
     public dialogRef: MdDialogRef<SubmitGameResultDialogComponent>,
     private utils: MyUtilitiesService,
-    private FDB: AngularFireDatabase,
-    private FDBservice: MyFirebaseSubscribeService
+    private afDatabase: AngularFireDatabase,
+    private afDatabaseService: MyFirebaseSubscribeService
   ) {
   }
 
   ngOnInit() {
-    this.FDB.list( '/data/ScoringList' ).subscribe( val => {
-      let defaultScores = this.FDBservice.convertAs( val, "ScoringList" );
+    this.afDatabase.list( '/data/ScoringList' ).subscribe( val => {
+      let defaultScores = this.afDatabaseService.convertAs( val, "ScoringList" );
       this.newGameResult.rankPlayers();
       this.newGameResult.setScores( defaultScores );
     } );
@@ -45,7 +45,7 @@ export class SubmitGameResultDialogComponent implements OnInit {
 
 
   submitGameResult() {
-    this.FDB.list( '/data/GameResultList/' )
+    this.afDatabase.list( '/data/GameResultList/' )
       .update( `${this.GameResultList.length}`, this.newGameResult );
   }
 }

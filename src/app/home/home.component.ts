@@ -9,12 +9,12 @@ import { AppListComponent } from "../app-list/app-list.component";
 })
 export class HomeComponent implements OnInit {
 
-  Apps: {address: string, inService: boolean, title: string, subtitle: string}[] = [
+  Apps = [
     {
-      address: "/dominion",
-      inService : true,
-      title: "Dominion Apps",
-      subtitle: "サプライ生成＆ゲーム結果追加，成績表，プレイヤー一覧，カード一覧表，ルールブック",
+      routerLink : "/dominion",
+      inService  : true,
+      title      : "Dominion Apps",
+      subtitle   : "サプライ生成＆ゲーム結果追加，成績表，プレイヤー一覧，カード一覧表，ルールブック",
     },
   ];
 

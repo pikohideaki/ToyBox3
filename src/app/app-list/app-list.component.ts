@@ -9,10 +9,10 @@ export class AppListComponent implements OnInit {
 
   @Input() AppName: string;
   @Input() Apps: {
-          address   : string,
-          inService : boolean,
-          title     : string,
-          subtitle  : string
+          routerLink : string,
+          inService  : boolean,
+          title      : string,
+          subtitle   : string
       }[] = [];
 
   constructor() { }

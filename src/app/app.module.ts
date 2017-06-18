@@ -51,11 +51,12 @@ import { SubmitGameResultDialogComponent } from './dominion/submit-game-result-d
 import { GameResultListComponent         } from './dominion/game-result/game-result-list/game-result-list.component';
 import { GameResultOfPlayerComponent     } from './dominion/game-result/game-result-of-player/game-result-of-player.component';
 import { AddGameResultComponent          } from './dominion/randomizer/add-game-result/add-game-result.component';
-import { LocalGameGroupsComponent        } from './dominion/randomizer/local-game-groups/local-game-groups.component';
 import { RandomizerCardImageComponent    } from './dominion/randomizer/randomizer-card-image/randomizer-card-image.component';
-import { RandomizerSelectCardsComponent } from './dominion/randomizer/randomizer-select-cards/randomizer-select-cards.component';
-import { SyncGroupsComponent } from './dominion/randomizer/sync-groups/sync-groups.component';
-import { BlackMarketPileComponent } from './dominion/randomizer/black-market-pile/black-market-pile.component';
+import { RandomizerSelectCardsComponent  } from './dominion/randomizer/randomizer-select-cards/randomizer-select-cards.component';
+import { SyncGroupsComponent             } from './dominion/randomizer/sync-groups/sync-groups.component';
+import { BlackMarketPileComponent        } from './dominion/randomizer/black-market-pile/black-market-pile.component';
+import { ScoringTableComponent           } from './dominion/scoring-table/scoring-table.component';
+import { UserAuthenticationComponent     } from './dominion/user-authentication/user-authentication.component';
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -82,13 +83,14 @@ import { BlackMarketPileComponent } from './dominion/randomizer/black-market-pil
     PlayersComponent,
     RandomizerComponent,
     AddGameResultComponent,
-    LocalGameGroupsComponent,
     RandomizerCardImageComponent,
     RuleBooksComponent,
     ConfirmDialogComponent,
     RandomizerSelectCardsComponent,
     SyncGroupsComponent,
-    BlackMarketPileComponent
+    BlackMarketPileComponent,
+    ScoringTableComponent,
+    UserAuthenticationComponent
   ],
   imports: [
     BrowserModule,
@@ -97,13 +99,15 @@ import { BlackMarketPileComponent } from './dominion/randomizer/black-market-pil
     BrowserAnimationsModule,
     HttpModule,
     RouterModule.forRoot( [
-      { path: ''                   , component: HomeComponent       },
-      { path: 'dominion'           , component: DominionComponent   },
-      { path: 'dominion/cardlist'  , component: CardPropertyListComponent   },
-      { path: 'dominion/rulebooks' , component: RuleBooksComponent  },
-      { path: 'dominion/randomizer', component: RandomizerComponent },
-      { path: 'dominion/gameresult', component: GameResultComponent },
-      { path: 'dominion/players'   , component: PlayersComponent    }
+      { path: ''                            , component: HomeComponent               },
+      { path: 'dominion'                    , component: DominionComponent           },
+      { path: 'dominion/cardlist'           , component: CardPropertyListComponent   },
+      { path: 'dominion/rulebooks'          , component: RuleBooksComponent          },
+      { path: 'dominion/randomizer'         , component: RandomizerComponent         },
+      { path: 'dominion/gameresult'         , component: GameResultComponent         },
+      { path: 'dominion/players'            , component: PlayersComponent            },
+      { path: 'dominion/scoring'            , component: ScoringTableComponent       },
+      { path: 'dominion/user-authentication', component: UserAuthenticationComponent }
     ], { useHash: true } ),
     MaterialModule,
     MdDatepickerModule,

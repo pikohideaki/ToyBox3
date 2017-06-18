@@ -30,11 +30,11 @@ export class PlayersComponent implements OnInit {
 
   constructor(
     private utils: MyUtilitiesService,
-      FDB: AngularFireDatabase,
-      private FDBservice: MyFirebaseSubscribeService
+    afDatabase: AngularFireDatabase,
+    private afDatabaseService: MyFirebaseSubscribeService
   ) {
-      FDB.list( '/data/PlayersNameList' ).subscribe( val => {
-        this.PlayersNameList = this.FDBservice.convertAs( val, "PlayersNameList" );
+      afDatabase.list( '/data/PlayersNameList' ).subscribe( val => {
+        this.PlayersNameList = this.afDatabaseService.convertAs( val, "PlayersNameList" );
         this.httpGetDone = true;
       } );
   }

@@ -1,7 +1,18 @@
 
 <md-toolbar color='primary' class='header'>
   <a md-icon-button routerLink='/'> <md-icon>home</md-icon> </a>
-  <a md-button routerLink='/dominion' class='toolbar-button' > Dominion </a>
+  <a class='toolbarButton'  md-button routerLink='/dominion' > Dominion </a>
+
+  <span class="spacer"></span>
+
+  <span class="userName">{{ (user | async)?.displayName }}</span>
+  <a md-icon-button [mdMenuTriggerFor]="menu"> <md-icon>person</md-icon> </a>
+  <md-menu #menu="mdMenu" [overlapTrigger]="false">
+    <a md-menu-item routerLink='/dominion/user-authentication'>ユーザー設定</a>
+    <button md-menu-item (click)="logout()">
+      <span>ログアウト</span>
+    </button>
+  </md-menu>
 </md-toolbar>
 
 <md-toolbar> <!--dummy--> </md-toolbar>

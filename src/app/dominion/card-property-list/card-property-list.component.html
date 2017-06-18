@@ -8,5 +8,5 @@
         (onClick)='showDetail( $event.rowIndex )' >
     </my-data-table>
 
-    <my-waiting-spinner *ngIf="!httpGetDone"></my-waiting-spinner>
+    <my-waiting-spinner [done]="httpGetDone"></my-waiting-spinner>
 </div>

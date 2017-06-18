@@ -55,11 +55,11 @@ export class CardPropertyListComponent implements OnInit {
   constructor(
     private utils: MyUtilitiesService,
     public dialog: MdDialog,
-    FDB: AngularFireDatabase,
-    private FDBservice: MyFirebaseSubscribeService
+    afDatabase: AngularFireDatabase,
+    private afDatabaseService: MyFirebaseSubscribeService
   ) {
-    FDB.list( '/data/CardPropertyList' ).subscribe( val => {
-      this.CardPropertyList = this.FDBservice.convertAs( val, "CardPropertyList" );
+    afDatabase.list( '/data/CardPropertyList' ).subscribe( val => {
+      this.CardPropertyList = this.afDatabaseService.convertAs( val, "CardPropertyList" );
       this.httpGetDone = true;
       this.CardPropertyListForView = this.CardPropertyList.map( x => x.transform() );
     } );

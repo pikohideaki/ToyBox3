@@ -79,7 +79,7 @@ export class MyDataTableComponent implements OnInit, OnChanges  {
 
 
   updateView() {
-    this.filteredData = this.data.filter( x => this.filterFunction(x) );
+    this.filteredData = ( this.data === undefined ? [] : this.data.filter( x => this.filterFunction(x) ) );
     this.setSelectorOptions( this.filteredData );
     this.selectedPageIndex = 0;
   }

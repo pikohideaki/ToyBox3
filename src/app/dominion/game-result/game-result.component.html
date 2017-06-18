@@ -53,6 +53,6 @@
     </md-tab>
   </md-tab-group>
 
-  <my-waiting-spinner *ngIf="!httpGetDone"></my-waiting-spinner>
+  <my-waiting-spinner [done]="httpGetDone"></my-waiting-spinner>
 </div>
 

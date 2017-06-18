@@ -15,6 +15,7 @@ export class RandomizerCardImageComponent implements OnInit {
 
   @Input() longSideLength: number = 140;
 
+  @Input() CardPropertyList: CardProperty[];
 
   @Input() SelectedCards: SelectedCards = new SelectedCards(); 
 
@@ -22,7 +23,6 @@ export class RandomizerCardImageComponent implements OnInit {
   Colony  : { data: CardProperty, checked: boolean };
 
 
-  @Input() CardPropertyList: CardProperty[];
 
   constructor(
     private utils: MyUtilitiesService,

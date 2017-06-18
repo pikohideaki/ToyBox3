@@ -6,9 +6,10 @@
     </button>
     <div class="clear"></div>
     <app-sync-groups
+        [PlayersNameList]="PlayersNameList"
+        [DominionSetList]="DominionSetList"
         [SelectedCards]="SelectedCards"
-        [newGameResult]="newGameResult"
-        [(syncGroups)]="syncGroups">
+        [(myUserID)]="myUserID" >
     </app-sync-groups>
   </md-sidenav>
 
@@ -17,6 +18,10 @@
     <button md-button (click)="sidenav.open()">
       <md-icon>group</md-icon>
     </button>
+    <!--<span *ngIf="mySyncGroup.id != ''">-->
+      <!--( Group : "{{mySyncGroup.data.name}}", My Name : "{{myName}}" )-->
+      ( My User ID : {{myUserID}} )
+    <!--</span>-->
 
     <md-tab-group>
       <md-tab label="Randomizer">
@@ -26,8 +31,9 @@
 
           <!--使用する拡張セットにチェック-->
           <app-randomizer-select-cards *ngIf="httpGetAllDone()"
+              [myUserID]="myUserID"
               [CardPropertyList]="CardPropertyList"
-              [DominionSetNameList]="DominionSetNameList"
+              [(DominionSetList)]="DominionSetList"
               [(SelectedCards)]="SelectedCards">
           </app-randomizer-select-cards>
         </div>
@@ -48,8 +54,9 @@
       </md-tab>
       <md-tab label="結果入力">
         <app-add-game-result
+          [PlayersNameList]="PlayersNameList"
           [SelectedCards]="SelectedCards"
-          [DominionSetNameList]="DominionSetNameList"
+          [DominionSetList]="DominionSetList"
           [CardPropertyList]="CardPropertyList"
           [(newGameResult)]="newGameResult">
         </app-add-game-result>
