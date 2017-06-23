@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
@@ -26,9 +26,6 @@ export class SyncGroupsComponent implements OnInit {
 
   syncGroups: { id: string, selected: boolean, data: SyncGroup }[];
   users: { id: string, data: { name: string, groupID: string } }[];
-
-  @Input()  myUserID: string;
-  @Output() myUserIDChange = new EventEmitter<string>();
 
   mySyncGroup: { id: string, data: SyncGroup };
 
@@ -58,21 +55,9 @@ export class SyncGroupsComponent implements OnInit {
     });
 
     console.log( "c() localStorage_has", this.utils.localStorage_has( "myUserID" ))
-    if ( this.utils.localStorage_has( "myUserID" ) ) {
-      this.myUserID = this.utils.localStorage_get( "myUserID" );
-      console.log( "localStorage_get", this.myUserID)
-      this.myUserIDChange.emit( this.myUserID );
-    }
   }
 
   ngOnInit() {
-  }
-
-  updateMyUserID( newID ) {
-    this.myUserID = newID;
-    this.myUserIDChange.emit( this.myUserID );
-    this.utils.localStorage_set( "myUserID", this.myUserID );
-    console.log( "u() localStorage_has", this.utils.localStorage_has( "myUserID" ))
   }
 
   getUserNamesInGroup( groupID ) {
@@ -86,29 +71,10 @@ export class SyncGroupsComponent implements OnInit {
 
     if ( userIndex === -1 ) {  // new user
       const newID = this.afDatabase.list("/users").push( { name: this.myName, groupID: groupID } ).key;
-      this.updateMyUserID( newID );
     } else {
-      this.updateMyUserID( this.users[userIndex].id );
-      this.afDatabase.list("/users").update( this.myUserID, { name: this.myName, groupID: groupID } );
+      // this.afDatabase.list("/users").update( this.myUserID, { name: this.myName, groupID: groupID } );
     }
   }
-
-  // addSyncGroup( form: NgForm ) {
-  //   const newGroup = new SyncGroup({
-  //     name                 : form.value.newGroupName,
-  //     password             : form.value.newGroupPassword,
-  //     timeStamp            : Date.now(),
-  //     selectedCards        : this.SelectedCards,
-  //     selectedDominionSets : this.DominionSetList,
-  //   });
-
-  //   const groupID = this.afDatabase.list("/syncGroups").push( newGroup ).key;
-
-  //   this.myName = form.value.myName;
-  //   this.updateMyGroupID( groupID );
-
-  //   this.removeMemberEmptyGroup();
-  // }
 
   addSyncGroup() {
     const newGroup = new SyncGroup({
@@ -159,7 +125,6 @@ export class SyncGroupsComponent implements OnInit {
       const userIndex = this.users.findIndex( user => user.data.name === this.myName );
       if ( userIndex !== -1 ) {
         this.afDatabase.list("/users").remove( this.users[userIndex].id );
-        this.updateMyUserID("");
       }
       this.openSnackBar("Successfully signed out!");
       this.removeMemberEmptyGroup();

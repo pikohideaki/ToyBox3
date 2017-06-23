@@ -26,3 +26,8 @@ body {
 .alert {
   color: red;
 }
+
+.bodyWithoutHeader {
+  height: calc(100vh - 64px);  /* subtract header height */
+  width: 100vw;
+}

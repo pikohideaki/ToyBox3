@@ -56,7 +56,9 @@ import { RandomizerSelectCardsComponent  } from './dominion/randomizer/randomize
 import { SyncGroupsComponent             } from './dominion/randomizer/sync-groups/sync-groups.component';
 import { BlackMarketPileComponent        } from './dominion/randomizer/black-market-pile/black-market-pile.component';
 import { ScoringTableComponent           } from './dominion/scoring-table/scoring-table.component';
-import { UserAuthenticationComponent     } from './dominion/user-authentication/user-authentication.component';
+import { UserAdminComponent } from './user-admin/user-admin.component';
+import { LoginComponent } from './user-admin/login/login.component';
+import { SignInComponent } from './user-admin/sign-in/sign-in.component';
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +92,9 @@ import { UserAuthenticationComponent     } from './dominion/user-authentication/
     SyncGroupsComponent,
     BlackMarketPileComponent,
     ScoringTableComponent,
-    UserAuthenticationComponent
+    UserAdminComponent,
+    LoginComponent,
+    SignInComponent
   ],
   imports: [
     BrowserModule,
@@ -99,15 +103,15 @@ import { UserAuthenticationComponent     } from './dominion/user-authentication/
     BrowserAnimationsModule,
     HttpModule,
     RouterModule.forRoot( [
-      { path: ''                            , component: HomeComponent               },
-      { path: 'dominion'                    , component: DominionComponent           },
-      { path: 'dominion/cardlist'           , component: CardPropertyListComponent   },
-      { path: 'dominion/rulebooks'          , component: RuleBooksComponent          },
-      { path: 'dominion/randomizer'         , component: RandomizerComponent         },
-      { path: 'dominion/gameresult'         , component: GameResultComponent         },
-      { path: 'dominion/players'            , component: PlayersComponent            },
-      { path: 'dominion/scoring'            , component: ScoringTableComponent       },
-      { path: 'dominion/user-authentication', component: UserAuthenticationComponent }
+      { path: ''                    , component: HomeComponent               },
+      { path: 'dominion'            , component: DominionComponent           },
+      { path: 'dominion/cardlist'   , component: CardPropertyListComponent   },
+      { path: 'dominion/rulebooks'  , component: RuleBooksComponent          },
+      { path: 'dominion/randomizer' , component: RandomizerComponent         },
+      { path: 'dominion/gameresult' , component: GameResultComponent         },
+      { path: 'dominion/players'    , component: PlayersComponent            },
+      { path: 'dominion/scoring'    , component: ScoringTableComponent       },
+      { path: 'user_admin'          , component: UserAdminComponent          }
     ], { useHash: true } ),
     MaterialModule,
     MdDatepickerModule,

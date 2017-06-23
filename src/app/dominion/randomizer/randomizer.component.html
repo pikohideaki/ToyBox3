@@ -8,8 +8,7 @@
     <app-sync-groups
         [PlayersNameList]="PlayersNameList"
         [DominionSetList]="DominionSetList"
-        [SelectedCards]="SelectedCards"
-        [(myUserID)]="myUserID" >
+        [SelectedCards]="SelectedCards">
     </app-sync-groups>
   </md-sidenav>
 
@@ -20,7 +19,7 @@
     </button>
     <!--<span *ngIf="mySyncGroup.id != ''">-->
       <!--( Group : "{{mySyncGroup.data.name}}", My Name : "{{myName}}" )-->
-      ( My User ID : {{myUserID}} )
+      <!--( My User ID : {{myUserID}} )-->
     <!--</span>-->
 
     <md-tab-group>

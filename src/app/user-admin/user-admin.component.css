@@ -1,0 +1,17 @@
+
+.loginFormWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.formBox {
+  background-color: white;
+  padding: 10px;
+  border-radius: 5px;
+  min-width: 40vw;
+  max-width: 90vw;
+  min-height: 60vh;
+}
+

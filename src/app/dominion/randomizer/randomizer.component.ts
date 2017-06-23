@@ -28,7 +28,6 @@ export class RandomizerComponent implements OnInit {
   SelectedCards: SelectedCards = new SelectedCards();
   newGameResult: GameResult;
 
-  myUserID: string;
 
   constructor(
     private utils: MyUtilitiesService,
