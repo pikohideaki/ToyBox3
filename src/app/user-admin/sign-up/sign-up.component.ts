@@ -2,17 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MdSnackBar } from '@angular/material';
 
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+
 import { Observable } from 'rxjs/Observable';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
+import { UserInfo } from '../../user-info';
 
 @Component({
-  selector: 'app-sign-in',
-  templateUrl: './sign-in.component.html',
-  styleUrls: ['./sign-in.component.css']
+  selector: 'app-sign-up',
+  templateUrl: './sign-up.component.html',
+  styleUrls: ['./sign-up.component.css']
 })
-export class SignInComponent implements OnInit {
+export class SignUpComponent implements OnInit {
 
   waitingForResponse: boolean = false;
 
@@ -28,8 +31,10 @@ export class SignInComponent implements OnInit {
   constructor(
     public snackBar: MdSnackBar,
     public afAuth: AngularFireAuth,
-    private router: Router
-  ) { }
+    private router: Router,
+    private afDatabase: AngularFireDatabase,
+  ) {
+  }
 
   ngOnInit() {
   }
@@ -43,6 +48,13 @@ export class SignInComponent implements OnInit {
     .then( () => {
       this.waitingForResponse = false;
       this.setDisplayName();
+      this.afAuth.authState.subscribe( val => {
+        let newUser = new UserInfo();
+        newUser.databaseKey = val.uid;
+        newUser.id          = val.uid;
+        newUser.name        = this.displayName;
+        this.afDatabase.list("/userInfo").update( val.uid, newUser );
+      } );
       this.router.navigate(['/']);
       this.openSnackBar("Successfully logged in!");
     } )

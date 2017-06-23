@@ -1,27 +1,6 @@
 <div class="bodyWithMargin">
 
   <div id="addGroup">
-    <!--<form #newGroupForm="ngForm" (ngSubmit)="addSyncGroup( newGroupForm )">
-      <md-input-container>
-        <input mdInput name="newGroupName" ngModel  placeholder="new group name" required>
-      </md-input-container>
-      <md-input-container>
-        <input mdInput name="newGroupPassword" ngModel  placeholder="password" required>
-      </md-input-container>
-
-      <md-select placeholder="your name" required name="myName"
-          id="myNameSelect" [(ngModel)]="myName" #myNameSelect="ngModel">
-        <md-option *ngFor="let player of PlayersNameList" [value]="player.name">
-          {{ player.name }}
-        </md-option>
-      </md-select>
-
-      <button type="submit" md-raised-button color="primary"
-          [disabled]="!newGroupForm.form.valid">
-        <md-icon>group_add</md-icon>
-      </button>
-
-    </form>-->
 
     <md-input-container>
       <input mdInput [(ngModel)]="newGroupName" placeholder="new group name" required>
@@ -29,12 +8,6 @@
     <md-input-container>
       <input mdInput [(ngModel)]="newGroupPassword" placeholder="password" required>
     </md-input-container>
-
-    <md-select placeholder="your name" required [(ngModel)]="myName" id="myNameSelect">
-      <md-option *ngFor="let player of PlayersNameList" [value]="player.name">
-        {{ player.name }}
-      </md-option>
-    </md-select>
 
     <button md-raised-button color="primary"
           (click)="addSyncGroup()"
@@ -59,7 +32,6 @@
         </md-card-subtitle>
       </md-card-header>
 
-
       <md-card-content *ngIf="group.selected">
         <md-input-container [color]="(signInPasswordIsValid( group.id ) ? 'primary' : 'warn')" >
           <input mdInput placeholder="password" required
@@ -68,25 +40,18 @@
             Password does not match
           </md-hint>
         </md-input-container>
-
-        <md-select placeholder="your name" required
-              name="myName" [(ngModel)]="myName">
-          <md-option *ngFor="let player of PlayersNameList" [value]="player.name">
-            {{ player.name }}
-          </md-option>
-        </md-select>
       </md-card-content>
 
       <md-card-actions *ngIf="group.selected">
         <button md-raised-button color="primary"
               (click)="signIn(group.id)"
-              [disabled]="signInPassword === '' || !myName ">
-          Sign in
+              [disabled]="!signInPassword">
+          参加
         </button>
         <button md-raised-button color="warn"   
               (click)="signOut(group.id)"
-              [disabled]="signInPassword === '' || !myName ">
-          Sign out
+              [disabled]="!signInPassword">
+          退出
         </button>
       </md-card-actions>
       

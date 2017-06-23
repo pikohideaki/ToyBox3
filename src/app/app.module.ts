@@ -58,7 +58,7 @@ import { BlackMarketPileComponent        } from './dominion/randomizer/black-mar
 import { ScoringTableComponent           } from './dominion/scoring-table/scoring-table.component';
 import { UserAdminComponent } from './user-admin/user-admin.component';
 import { LoginComponent } from './user-admin/login/login.component';
-import { SignInComponent } from './user-admin/sign-in/sign-in.component';
+import { SignUpComponent } from './user-admin/sign-up/sign-up.component';
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ import { SignInComponent } from './user-admin/sign-in/sign-in.component';
     ScoringTableComponent,
     UserAdminComponent,
     LoginComponent,
-    SignInComponent
+    SignUpComponent
   ],
   imports: [
     BrowserModule,

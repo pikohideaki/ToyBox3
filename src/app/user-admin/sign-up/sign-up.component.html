@@ -1,0 +1,42 @@
+<div class="wrapper">
+
+  <div>
+    <md-input-container [color]="( errorMessageForEmail !== '' ? 'primary' : 'warn' )">
+      <input mdInput [(ngModel)]="email" placeholder="E-mail" required>
+    </md-input-container>
+  </div>
+  <div>
+    <md-hint *ngIf="errorMessageForEmail !== '' " class="alert">
+      {{errorMessageForEmail}}
+    </md-hint>
+  </div>
+
+  <div>
+    <md-input-container [color]="( errorMessageForPassword !== '' ? 'primary' : 'warn' )">
+      <input mdInput [(ngModel)]="password" placeholder="Password" required>
+    </md-input-container>
+  </div>
+  <div>
+    <md-hint *ngIf="errorMessageForPassword !== '' " class="alert">
+      {{errorMessageForPassword}}
+    </md-hint>
+  </div>
+
+  <div>
+    <md-input-container>
+      <input mdInput [(ngModel)]="displayName" placeholder="name" required>
+    </md-input-container>
+  </div>
+
+
+  <div class="buttons">
+    <button md-raised-button color="primary"
+        [disabled]="!email || !password || !displayName"
+        (click)="signUp()">
+      Sign Up
+    </button>
+  </div>
+
+  <my-waiting-spinner [done]="!waitingForResponse"></my-waiting-spinner>
+
+</div>

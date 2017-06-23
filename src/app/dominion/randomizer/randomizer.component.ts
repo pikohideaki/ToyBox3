@@ -1,5 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
+
+
+import { Observable } from 'rxjs/Observable';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
 
 import { MyUtilitiesService } from '../../my-utilities.service';
 import { MyFirebaseSubscribeService } from "../my-firebase-subscribe.service";
@@ -28,12 +33,15 @@ export class RandomizerComponent implements OnInit {
   SelectedCards: SelectedCards = new SelectedCards();
   newGameResult: GameResult;
 
+  signedIn: boolean = false;
 
   constructor(
     private utils: MyUtilitiesService,
     afDatabase: AngularFireDatabase,
-    private afDatabaseService: MyFirebaseSubscribeService
+    private afDatabaseService: MyFirebaseSubscribeService,
+    public afAuth: AngularFireAuth
   ) {
+    afAuth.authState.subscribe( val => { this.signedIn = !!val; console.log(this.signedIn) } );
 
     afDatabase.list( '/data/PlayersNameList' ).subscribe( val => {
       this.PlayersNameList = this.afDatabaseService.convertAs( val, "PlayersNameList" );

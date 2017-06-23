@@ -1,8 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 import { MdSnackBar } from '@angular/material';
+
+import { Observable } from 'rxjs/Observable';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
+
 
 import { MyUtilitiesService } from '../../../my-utilities.service';
 import { MyFirebaseSubscribeService } from "../../my-firebase-subscribe.service";
@@ -10,6 +15,7 @@ import { GameResult } from "../../game-result";
 import { SelectedCards } from "../../selected-cards";
 import { SyncGroup } from "../sync-group";
 import { PlayerName } from "../../player-name";
+import { UserInfo } from "../../../user-info";
 
 
 @Component({
@@ -25,7 +31,8 @@ export class SyncGroupsComponent implements OnInit {
   @Input() SelectedCards: SelectedCards = new SelectedCards(); 
 
   syncGroups: { id: string, selected: boolean, data: SyncGroup }[];
-  users: { id: string, data: { name: string, groupID: string } }[];
+  // users: { id: string, data: { name: string, groupID: string } }[];
+  users: UserInfo[] = [];
 
   mySyncGroup: { id: string, data: SyncGroup };
 
@@ -35,45 +42,48 @@ export class SyncGroupsComponent implements OnInit {
   newGroupPassword: string;
   signInPassword: string;
 
+  me: Observable<firebase.User>;
+  myID: string;
+  signedIn: boolean = false;
 
 
   constructor(
     public snackBar: MdSnackBar,
     public utils: MyUtilitiesService,
     private afDatabase: AngularFireDatabase,
-    private afDatabaseService: MyFirebaseSubscribeService
+    private afDatabaseService: MyFirebaseSubscribeService,
+    public afAuth: AngularFireAuth
   ) {
+    this.me = afAuth.authState;
+    this.me.subscribe( val => {
+      this.signedIn = !!val;
+      this.myID = ( this.signedIn ? val.uid : "" );
+    });
 
-    this.afDatabase.list("/users", { preserveSnapshot: true }).subscribe( snapshots => {
-      this.users = this.afDatabaseService.convertAs( snapshots, "users" );
-      console.log("users", this.users)
+    // this.afDatabase.list("/users", { preserveSnapshot: true }).subscribe( snapshots => {
+    //   this.users = this.afDatabaseService.convertAs( snapshots, "users" );
+    //   console.log("users", this.users)
+    // });
+    this.afDatabase.list("/userInfo").subscribe( val => {
+      this.users = val.map( e => new UserInfo(e) );
     });
 
     this.afDatabase.list("/syncGroups", { preserveSnapshot: true }).subscribe( snapshots => {
       this.syncGroups = this.afDatabaseService.convertAs( snapshots, "syncGroups" );
-      console.log("syncGroups", this.syncGroups)
     });
-
-    console.log( "c() localStorage_has", this.utils.localStorage_has( "myUserID" ))
   }
 
   ngOnInit() {
   }
 
   getUserNamesInGroup( groupID ) {
-    return this.users.filter( user => user.data.groupID === groupID ).map( user => user.data.name );
+    return this.users.filter( user => user.dominionGroupID === groupID ).map( user => user.name );
   }
 
   updateMyGroupID( groupID ) {
-    const userIndex = this.users.findIndex( user => user.data.name === this.myName );
-
-    console.log(groupID, userIndex, this.users)
-
-    if ( userIndex === -1 ) {  // new user
-      const newID = this.afDatabase.list("/users").push( { name: this.myName, groupID: groupID } ).key;
-    } else {
-      // this.afDatabase.list("/users").update( this.myUserID, { name: this.myName, groupID: groupID } );
-    }
+    const me = this.users.find( user => user.id === this.myID );
+    me.dominionGroupID = groupID;
+    this.afDatabase.list("/userInfo").update( this.myID, me )
   }
 
   addSyncGroup() {
@@ -84,62 +94,42 @@ export class SyncGroupsComponent implements OnInit {
       selectedCards        : this.SelectedCards,
       selectedDominionSets : this.DominionSetList,
     });
-
     const groupID = this.afDatabase.list("/syncGroups").push( newGroup ).key;
-
     this.updateMyGroupID( groupID );
-
     this.removeMemberEmptyGroup();
   }
-
 
   groupClicked( index: number ) {
     this.syncGroups.forEach( g => g.selected = false );
     this.syncGroups[index].selected = true;
   }
 
-
-  // private sub( groupID ) {
-  //   if ( this.signInPassword !== this.syncGroups.find( g => g.id === groupID ).data.password ) {
-  //     this.signInPasswordIsValid = false;
-  //     return false;
-  //   }
-  //   this.signInPasswordIsValid = true;
-  //   return true;
-  // }
-
   signInPasswordIsValid( groupID ): boolean {
     return ( this.signInPassword === this.syncGroups.find( g => g.id === groupID ).data.password );
   }
 
   signIn( groupID ) {
-    if ( this.signInPasswordIsValid( groupID ) === true ) {
-      this.updateMyGroupID( groupID );
-      this.openSnackBar("Successfully signed in!");
-      this.removeMemberEmptyGroup();
-    }
+    if ( !this.signInPasswordIsValid( groupID ) ) return;
+    this.updateMyGroupID( groupID );
+    this.openSnackBar("Successfully signed in!");
+    this.removeMemberEmptyGroup();
   }
 
   signOut( groupID ) {
-    if ( this.signInPasswordIsValid( groupID ) === true ) {
-      const userIndex = this.users.findIndex( user => user.data.name === this.myName );
-      if ( userIndex !== -1 ) {
-        this.afDatabase.list("/users").remove( this.users[userIndex].id );
-      }
-      this.openSnackBar("Successfully signed out!");
-      this.removeMemberEmptyGroup();
-    }
+    if ( !this.signInPasswordIsValid( groupID ) ) return;
+    this.updateMyGroupID( "" );
+    this.openSnackBar("Successfully signed out!");
+    this.removeMemberEmptyGroup();
+  }
+
+  removeMemberEmptyGroup() {
+    this.syncGroups
+      .filter( g => this.users.findIndex( user => user.dominionGroupID === g.id ) === -1 )
+      .forEach( g => this.afDatabase.list("/syncGroups").remove( g.id ) );
   }
 
   private openSnackBar( message: string ) {
     this.snackBar.open( message, undefined, { duration: 3000 } );
-  }
-
-
-  removeMemberEmptyGroup() {
-    this.syncGroups
-      .filter( g => this.users.findIndex( user => user.data.groupID === g.id ) === -1 )
-      .forEach( g => this.afDatabase.list("/syncGroups").remove( g.id ) );
   }
 
 }
