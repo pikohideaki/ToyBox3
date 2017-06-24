@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/map';
@@ -25,9 +25,9 @@ import { CardProperty } from "../../card-property";
     './add-game-result.component.css'
   ]
 })
-export class AddGameResultComponent implements OnInit, OnChanges {
+export class AddGameResultComponent implements OnInit {
 
-  httpGetDone: boolean[] = [false, false];
+  httpGetDone: boolean[] = [false, false, false];
 
 
   date: Date;
@@ -52,13 +52,12 @@ export class AddGameResultComponent implements OnInit, OnChanges {
 
   @Input() DominionSetList: { name: string, selected: boolean }[] = [];
   @Input() CardPropertyList: CardProperty[];
-
   @Input() SelectedCards: SelectedCards = new SelectedCards();
-  @Input() PlayersNameList: PlayerName[] = [];
+
+  PlayersNameList: PlayerName[] = [];
 
 
-  @Input() newGameResult: GameResult;
-  // @Output() newGameResultChange = new EventEmitter<GameResult>();
+  newGameResult: GameResult;
 
 
   constructor(
@@ -71,6 +70,11 @@ export class AddGameResultComponent implements OnInit, OnChanges {
     this.date = new Date( Date.now() );
 
     this.stateCtrl = new FormControl();
+
+    afDatabase.list( '/data/PlayersNameList' ).subscribe( val => {
+      this.PlayersNameList = this.afDatabaseService.convertAs( val, "PlayersNameList" );
+      this.httpGetDone[2] = true;
+    } );
 
     afDatabase.list( '/data/ScoringList' ).subscribe( val => {
       this.httpGetDone[0] = true;
@@ -91,18 +95,18 @@ export class AddGameResultComponent implements OnInit, OnChanges {
 
   ngOnInit() {
   }
-  
-  ngOnChanges( changes: SimpleChanges ) {
-    if ( changes.PlayersNameList != undefined ) {  // at http-get done
-      this.Players = this.PlayersNameList.map( player => {
-        return {
-          name      : player.name,
-          selected  : false,
-          VP        : 0,
-          lessTurns : false,
-        } } );
-    }
-  }
+
+  // ngOnChanges( changes: SimpleChanges ) {
+  //   if ( changes.PlayersNameList != undefined ) {  // at http-get done
+  //     this.Players = this.PlayersNameList.map( player => {
+  //       return {
+  //         name      : player.name,
+  //         selected  : false,
+  //         VP        : 0,
+  //         lessTurns : false,
+  //       } } );
+  //   }
+  // }
 
 
   httpGetAllDone() : boolean {
@@ -147,18 +151,12 @@ export class AddGameResultComponent implements OnInit, OnChanges {
       usedCardIDs      : {
         Prosperity      : this.SelectedCards.Prosperity,
         DarkAges        : this.SelectedCards.DarkAges,
-        KingdomCards10  : this.SelectedCards.KingdomCards10 
-                              .map( card => this.CardPropertyList[card.index].card_ID ),
-        BaneCard        : this.SelectedCards.BaneCard       
-                              .map( card => this.CardPropertyList[card.index].card_ID ),
-        EventCards      : this.SelectedCards.EventCards     
-                              .map( card => this.CardPropertyList[card.index].card_ID ),
-        Obelisk         : this.SelectedCards.Obelisk        
-                              .map( card => this.CardPropertyList[card.index].card_ID ),
-        LandmarkCards   : this.SelectedCards.LandmarkCards  
-                              .map( card => this.CardPropertyList[card.index].card_ID ),
-        BlackMarketPile : this.SelectedCards.BlackMarketPile
-                              .map( card => this.CardPropertyList[card.index].card_ID ),
+        KingdomCards10  : this.SelectedCards.KingdomCards10 .map( card => this.CardPropertyList[card.index].card_ID ),
+        BaneCard        : this.SelectedCards.BaneCard       .map( card => this.CardPropertyList[card.index].card_ID ),
+        EventCards      : this.SelectedCards.EventCards     .map( card => this.CardPropertyList[card.index].card_ID ),
+        Obelisk         : this.SelectedCards.Obelisk        .map( card => this.CardPropertyList[card.index].card_ID ),
+        LandmarkCards   : this.SelectedCards.LandmarkCards  .map( card => this.CardPropertyList[card.index].card_ID ),
+        BlackMarketPile : this.SelectedCards.BlackMarketPile.map( card => this.CardPropertyList[card.index].card_ID ),
       },
       players : this.selectedPlayers().map( pl => {
               return {
@@ -174,7 +172,7 @@ export class AddGameResultComponent implements OnInit, OnChanges {
 
     dialogRef.componentInstance.newGameResult    = this.newGameResult;
     dialogRef.componentInstance.GameResultList   = this.GameResultList;
-    dialogRef.componentInstance.CardPropertyList = this.CardPropertyList;
+    // dialogRef.componentInstance.CardPropertyList = this.CardPropertyList;
 
     dialogRef.afterClosed().subscribe( result => {
       if ( result == "OK Clicked" ) {

@@ -1,9 +1,10 @@
-import {
-    Component, OnInit,
-    Input, Output, EventEmitter,
-    OnChanges, SimpleChanges
-  } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
+import { Observable } from 'rxjs/Observable';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireAuth } from 'angularfire2/auth';
+import * as firebase from 'firebase/app';
+
 
 import { MyUtilitiesService } from '../../../my-utilities.service';
 import { MyFirebaseSubscribeService } from "../../my-firebase-subscribe.service";
@@ -12,6 +13,8 @@ import { MyDataTableComponent } from '../../../my-data-table/my-data-table.compo
 import { CardProperty } from "../../card-property";
 import { SelectedCards } from "../../selected-cards";
 import { SyncGroup } from "../sync-group";
+import { UserInfo } from "../../../user-info";
+
 
 @Component({
   providers: [MyUtilitiesService],
@@ -22,7 +25,7 @@ import { SyncGroup } from "../sync-group";
     './randomizer-select-cards.component.css'
   ]
 })
-export class RandomizerSelectCardsComponent implements OnInit, OnChanges {
+export class RandomizerSelectCardsComponent implements OnInit {
 
   httpGetDone: boolean[] = [false,false];
 
@@ -34,46 +37,47 @@ export class RandomizerSelectCardsComponent implements OnInit, OnChanges {
   @Input()  SelectedCards: SelectedCards = new SelectedCards(); 
   @Output() SelectedCardsChange = new EventEmitter<SelectedCards>();
 
-  // @Input() mySyncGroup: { id: string, data: SyncGroup } = { id: "", data: new SyncGroup() };
-  @Input() myUserID: string;
-  mySyncGroupID: string;
+  users: UserInfo[] = [];
+  syncGroups: { id: string, selected: boolean, data: SyncGroup }[];
 
-  users;
-  syncGroups;
+  me: Observable<firebase.User>;
+  myID: string;
+  signedIn: boolean = false;
+
 
   randomizerButtonDisabled: boolean = false;
   AllSetsSelected: boolean = true;
 
+
   constructor(
     private utils: MyUtilitiesService,
     private afDatabase: AngularFireDatabase,
-    private afDatabaseService: MyFirebaseSubscribeService
+    private afDatabaseService: MyFirebaseSubscribeService,
+    public afAuth: AngularFireAuth
   ) {
-    
-    afDatabase.list("/users", { preserveSnapshot: true }).subscribe( snapshots => {
+
+    this.me = afAuth.authState;
+    this.me.subscribe( val => {
+      this.signedIn = !!val;
+      this.myID = ( this.signedIn ? val.uid : "" );
+      this.loadFromSync();
+    });
+
+    this.afDatabase.list("/userInfo").subscribe( val => {
       this.httpGetDone[0] = true;
-      this.users = this.afDatabaseService.convertAs( snapshots, "users" );
-      console.log("sc_users", this.users)
-      this.getFromSync();
+      this.users = val.map( e => new UserInfo(e) );
+      this.loadFromSync();
     });
 
     afDatabase.list("/syncGroups", { preserveSnapshot: true }).subscribe( snapshotsGroups => {
       this.httpGetDone[1] = true;
       this.syncGroups = this.afDatabaseService.convertAs( snapshotsGroups, "syncGroups" );
-      console.log("sc_syncGroups", this.syncGroups)
-      this.getFromSync();
+      this.loadFromSync();
     });
 
   }
 
   ngOnInit() {
-  }
-
-  ngOnChanges( changes: SimpleChanges ) {
-    if ( changes.myUserID !== undefined ) {
-      console.log( "ngOnChanges", this.myUserID )
-      this.getFromSync();
-    }
   }
 
 
@@ -82,48 +86,51 @@ export class RandomizerSelectCardsComponent implements OnInit, OnChanges {
   }
 
 
-  signedIn(): boolean {
-    return this.myUserID !== undefined && this.myUserID !== "";
+  mySyncGroupID() {
+    let me = this.users.find( user => user.id === this.myID );
+    return ( me? me.dominionGroupID : "" );
   }
 
-  getFromSync() {
-    console.log( "getFromSync", this.signedIn(), this.httpGetDone, this.httpGetAllDone(), this.myUserID)
-    if ( !this.signedIn() || !this.httpGetAllDone() ) return;
 
-    console.log("signedIn")
-    this.mySyncGroupID = this.users.find( user => user.id === this.myUserID ).data.groupID;
-    const mySyncGroup = this.syncGroups.find( g => g.id === this.mySyncGroupID );
-    const DominionSets_sync = mySyncGroup.data.selectedDominionSets;
-    console.log(DominionSets_sync)
+  private loadFromSync() {
+    if ( !this.signedIn || !this.httpGetAllDone() ) return;
+
+    const mySyncGroup = this.syncGroups.find( g => g.id === this.mySyncGroupID() );
+
+    const DominionSets_sync = mySyncGroup.data.DominionSetsSelected;
     if ( DominionSets_sync !== undefined && DominionSets_sync.length !== 0 ) {
-      this.DominionSetList = DominionSets_sync;
+      this.DominionSetList.forEach( (elem,idx,_) => elem.selected = DominionSets_sync[idx] );
       this.DominionSetListChange.emit( this.DominionSetList );
     }
 
-    const SelectedCards_sync = mySyncGroup.data.selectedCards;
-    console.log(SelectedCards_sync)
-    if ( SelectedCards_sync !== undefined && SelectedCards_sync.length !== 0 ) {
+    const SelectedCards_sync = mySyncGroup.data.SelectedCards;
+    if ( SelectedCards_sync !== undefined ) {
       this.SelectedCards = new SelectedCards( SelectedCards_sync );
       this.SelectedCardsChange.emit( this.SelectedCards );
     }
+
+    const randomizerButtonDisabled_sync = mySyncGroup.data.randomizerButtonDisabled;
+    if ( randomizerButtonDisabled_sync !== undefined ) {
+      this.randomizerButtonDisabled = randomizerButtonDisabled_sync;
+    }
+
   }
 
 
-  DominionSetNameListOnChange() {
+  DominionSetListOnChange() {
     this.DominionSetListChange.emit( this.DominionSetList );
-    console.log("DominionSetNameListOnChange")
-    if ( this.signedIn() ) {
-      this.afDatabase.list(`/syncGroups`)
-        .update( `${this.mySyncGroupID}/selectedDominionSets`, this.DominionSetList );
+    // this.utils.localStorage_set('DominionSetNameList', this.DominionSetList.map( e => e.selected ) );
+    if ( this.signedIn ) {
+      this.afDatabase.object( `/syncGroups/${this.mySyncGroupID()}/DominionSetsSelected`)
+        .set( this.DominionSetList.map( e => e.selected ) );
     }
   }
 
   SelectedCardsOnChange() {
     this.SelectedCardsChange.emit( this.SelectedCards );
-    console.log("SelectedCardsOnChange")
-    if ( this.signedIn() ) {
-      this.afDatabase.list(`/syncGroups`)
-        .update( `${this.mySyncGroupID}/selectedCards`, this.SelectedCards );
+    if ( this.signedIn ) {
+      this.afDatabase.object( `/syncGroups/${this.mySyncGroupID()}/SelectedCards`)
+        .set( this.SelectedCards );
     }
   }
 
@@ -131,20 +138,24 @@ export class RandomizerSelectCardsComponent implements OnInit, OnChanges {
 
   selectAllToggle() {
     this.DominionSetList.forEach( DominionSet => DominionSet.selected = this.AllSetsSelected );
-    this.DominionSetNameListOnChange();
+    this.DominionSetListOnChange();
+  }
+
+  disableRandomizerButton( flag: boolean ) {
+    this.randomizerButtonDisabled = flag;
+    if ( this.signedIn ) {
+      this.afDatabase.object( `/syncGroups/${this.mySyncGroupID()}/randomizerButtonDisabled`)
+        .set( this.randomizerButtonDisabled );
+    }
   }
 
   randomizerClicked() {
     if ( this.DominionSetList.every( DominionSet => !DominionSet.selected ) ) return;
-    this.randomizerButtonDisabled = true;
+    this.disableRandomizerButton(true);
     this.randomize();
-    this.utils.localStorage_set('DominionSetNameList', this.DominionSetList );
     this.SelectedCardsOnChange();
   }
 
-  unlockClicked() {
-    this.randomizerButtonDisabled = false;
-  }
 
   private randomize() {
     this.SelectedCards = new SelectedCards();  // reset
@@ -160,8 +171,6 @@ export class RandomizerSelectCardsComponent implements OnInit, OnChanges {
                      .map( s => s.name )
                      .findIndex( val => val == e.data.set_name ) >= 0 )
       );
-
-    console.log( CardsInSelectedSets_Shuffled.map( e => e.index ) );
 
     // 10 Supply KingdomCards10 and Event, LandmarkCards
     while ( this.SelectedCards.KingdomCards10.length < 10 ) {
@@ -225,13 +234,11 @@ export class RandomizerSelectCardsComponent implements OnInit, OnChanges {
       this.SelectedCards.Obelisk = [{ index: cardIndex, checked: false }];
     }
 
-    this.utils.sortNumeric( this.SelectedCards.KingdomCards10 );  // 繁栄場・避難所場の決定後にソート
-    this.utils.sortNumeric( this.SelectedCards.EventCards );
-    this.utils.sortNumeric( this.SelectedCards.LandmarkCards );
-    this.utils.sortNumeric( this.SelectedCards.BlackMarketPile );
+    this.SelectedCards.KingdomCards10 .sort( (a,b) => a.index - b.index );   // 繁栄場・避難所場の決定後にソート
+    this.SelectedCards.EventCards     .sort( (a,b) => a.index - b.index );
+    this.SelectedCards.LandmarkCards  .sort( (a,b) => a.index - b.index );
+    this.SelectedCards.BlackMarketPile.sort( (a,b) => a.index - b.index );
 
-    // output
-    this.SelectedCardsChange.emit( this.SelectedCards );
   }
 
 }

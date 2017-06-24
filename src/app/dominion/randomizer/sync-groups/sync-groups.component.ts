@@ -26,25 +26,21 @@ import { UserInfo } from "../../../user-info";
 })
 export class SyncGroupsComponent implements OnInit {
 
-  @Input() PlayersNameList: PlayerName[] = [];
   @Input() DominionSetList: { name: string, selected: boolean }[] = [];
   @Input() SelectedCards: SelectedCards = new SelectedCards(); 
 
   syncGroups: { id: string, selected: boolean, data: SyncGroup }[];
-  // users: { id: string, data: { name: string, groupID: string } }[];
   users: UserInfo[] = [];
-
-  mySyncGroup: { id: string, data: SyncGroup };
-
-  // bind to form element
-  myName: string;
-  newGroupName: string;
-  newGroupPassword: string;
-  signInPassword: string;
 
   me: Observable<firebase.User>;
   myID: string;
   signedIn: boolean = false;
+
+  // bind to form element
+  newGroupName: string;
+  newGroupPassword: string;
+  signInPassword: string;
+
 
 
   constructor(
@@ -60,10 +56,6 @@ export class SyncGroupsComponent implements OnInit {
       this.myID = ( this.signedIn ? val.uid : "" );
     });
 
-    // this.afDatabase.list("/users", { preserveSnapshot: true }).subscribe( snapshots => {
-    //   this.users = this.afDatabaseService.convertAs( snapshots, "users" );
-    //   console.log("users", this.users)
-    // });
     this.afDatabase.list("/userInfo").subscribe( val => {
       this.users = val.map( e => new UserInfo(e) );
     });
@@ -91,8 +83,8 @@ export class SyncGroupsComponent implements OnInit {
       name                 : this.newGroupName,
       password             : this.newGroupPassword,
       timeStamp            : Date.now(),
-      selectedCards        : this.SelectedCards,
-      selectedDominionSets : this.DominionSetList,
+      SelectedCards        : this.SelectedCards,
+      DominionSetsSelected : this.DominionSetList.map( e => e.selected ),
     });
     const groupID = this.afDatabase.list("/syncGroups").push( newGroup ).key;
     this.updateMyGroupID( groupID );

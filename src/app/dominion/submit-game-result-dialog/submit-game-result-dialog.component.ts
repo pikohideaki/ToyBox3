@@ -21,8 +21,8 @@ import { SelectedCards } from "../selected-cards";
 })
 export class SubmitGameResultDialogComponent implements OnInit {
 
-  @Input() CardPropertyList: CardProperty[] = [];
-  @Input() DominionSetNameList: { name: string, selected: boolean }[] = [];
+  // @Input() CardPropertyList: CardProperty[] = [];
+  // @Input() DominionSetList: { name: string, selected: boolean }[] = [];
   @Input() GameResultList: GameResult[] = [];
 
   @Input() newGameResult: GameResult;

@@ -10,6 +10,7 @@ export class UserInfo {
     // reset at mypage
 
   constructor( userInfoObj? ) {
+    if ( userInfoObj === undefined ) return;
     this.databaseKey     = userInfoObj.databaseKey;
     this.id              = userInfoObj.id;
     this.name            = userInfoObj.name;

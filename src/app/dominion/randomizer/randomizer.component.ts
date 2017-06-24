@@ -13,7 +13,7 @@ import { CardProperty } from "../card-property";
 import { GameResult } from "../game-result";
 import { PlayerName } from "../player-name";
 import { SelectedCards } from "../selected-cards";
-import { SyncGroup } from "./sync-group";
+// import { SyncGroup } from "./sync-group";
 
 
 @Component({
@@ -31,7 +31,6 @@ export class RandomizerComponent implements OnInit {
   PlayersNameList: PlayerName[] = [];
 
   SelectedCards: SelectedCards = new SelectedCards();
-  newGameResult: GameResult;
 
   signedIn: boolean = false;
 
@@ -41,31 +40,29 @@ export class RandomizerComponent implements OnInit {
     private afDatabaseService: MyFirebaseSubscribeService,
     public afAuth: AngularFireAuth
   ) {
-    afAuth.authState.subscribe( val => { this.signedIn = !!val; console.log(this.signedIn) } );
+    afAuth.authState.subscribe( val => { this.signedIn = !!val } );
 
-    afDatabase.list( '/data/PlayersNameList' ).subscribe( val => {
-      this.PlayersNameList = this.afDatabaseService.convertAs( val, "PlayersNameList" );
-    } );
+
+    // if ( this.utils.localStorage_has('DominionSetNameList') ) {
+    //   let ls = this.utils.localStorage_get('DominionSetNameList');
+    //   this.DominionSetList.forEach( elm => {
+    //     let localValue = ls.find( e => e.name == elm.name );
+    //     if ( localValue ) { elm.selected = localValue.selected; }
+    //   })
+    // }
 
     afDatabase.list( '/data/DominionSetNameList' ).subscribe( val => {
       this.httpGetDone[0] = true;
       this.DominionSetList
         = this.afDatabaseService.convertAs( val, "DominionSetNameList" )
                 .map( e => { return { name: e, selected: true } } );
-
-      if ( this.utils.localStorage_has('DominionSetNameList') ) {
-        let ls = this.utils.localStorage_get('DominionSetNameList');
-        this.DominionSetList.forEach( elm => {
-          let localValue = ls.find( e => e.name == elm.name );
-          if ( localValue ) { elm.selected = localValue.selected; }
-        })
-      }
     });
 
     afDatabase.list( '/data/CardPropertyList' ).subscribe( val => {
       this.httpGetDone[1] = true;
       this.CardPropertyList = this.afDatabaseService.convertAs( val, "CardPropertyList" );
     });
+
   }
 
   httpGetAllDone() : boolean {

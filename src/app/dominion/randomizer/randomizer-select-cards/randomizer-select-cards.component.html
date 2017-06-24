@@ -1,6 +1,7 @@
+<span>{{mySyncGroupID()}}</span>
 <div id="randomizerOptions">
   <div>
-    <md-slide-toggle [(ngModel)]="AllSetsSelected"  (change)="selectAllToggle()">
+    <md-slide-toggle [(ngModel)]="AllSetsSelected"  (change)="selectAllToggle(); DominionSetListOnChange();">
       <b>全選択</b>
     </md-slide-toggle>
   </div>
@@ -18,7 +19,7 @@
     </button>
     <button md-raised-button color='primary'
         *ngIf="randomizerButtonDisabled"
-        (click)='unlockClicked()'>
+        (click)='disableRandomizerButton(false)'>
       Unlock
     </button>
   </div>
@@ -28,15 +29,15 @@
 <div id="supplyTable">
   <div class="Prosperity_DarkAges">
     <span id="Prosperity" *ngIf="SelectedCards.KingdomCards10.length > 0">
-      <md-slide-toggle [(ngModel)]="SelectedCards.Prosperity">
-          <!--(change)="SelectedCardsOnChange()">-->
+      <md-slide-toggle [(ngModel)]="SelectedCards.Prosperity"
+          (change)="SelectedCardsOnChange()">
         植民地場
       </md-slide-toggle>
     </span>
 
     <span id="DarkAges"   *ngIf="SelectedCards.KingdomCards10.length > 0">
-      <md-slide-toggle [(ngModel)]="SelectedCards.DarkAges">
-          <!--(change)="SelectedCardsOnChange()">-->
+      <md-slide-toggle [(ngModel)]="SelectedCards.DarkAges"
+          (change)="SelectedCardsOnChange()">
         避難所場
       </md-slide-toggle>
     </span>
@@ -55,7 +56,12 @@
 
     <tbody>
       <tr *ngFor="let card of SelectedCards.KingdomCards10">
-        <td> <md-checkbox></md-checkbox> </td>
+        <td>
+          <md-checkbox
+              [(ngModel)]="card.selected"
+              (change)="SelectedCardsOnChange()">
+          </md-checkbox>
+        </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>
@@ -70,7 +76,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let card of SelectedCards.BaneCard">
-        <td> <md-checkbox></md-checkbox> </td>
+        <td>
+          <md-checkbox
+              [(ngModel)]="card.selected"
+              (change)="SelectedCardsOnChange()">
+          </md-checkbox>
+        </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>
@@ -85,7 +96,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let card of SelectedCards.EventCards">
-        <td> <md-checkbox></md-checkbox> </td>
+        <td>
+          <md-checkbox
+              [(ngModel)]="card.selected"
+              (change)="SelectedCardsOnChange()">
+          </md-checkbox>
+        </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>
@@ -100,7 +116,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let card of SelectedCards.LandmarkCards">
-        <td> <md-checkbox></md-checkbox> </td>
+        <td>
+          <md-checkbox
+              [(ngModel)]="card.selected"
+              (change)="SelectedCardsOnChange()">
+          </md-checkbox>
+        </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>
@@ -115,7 +136,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let card of SelectedCards.Obelisk">
-        <td> <md-checkbox></md-checkbox> </td>
+        <td>
+          <md-checkbox
+              [(ngModel)]="card.selected"
+              (change)="SelectedCardsOnChange()">
+          </md-checkbox>
+        </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>
@@ -130,7 +156,12 @@
     </thead>
     <tbody>
       <tr *ngFor="let card of SelectedCards.BlackMarketPile">
-        <td> <md-checkbox></md-checkbox> </td>
+        <td>
+          <md-checkbox
+              [(ngModel)]="card.selected"
+              (change)="SelectedCardsOnChange()">
+          </md-checkbox>
+        </td>
         <td> {{ CardPropertyList[card.index].set_name }} </td>
         <td> {{ CardPropertyList[card.index].name_jp  }} </td>
         <td> {{ CardPropertyList[card.index].name_eng }} </td>

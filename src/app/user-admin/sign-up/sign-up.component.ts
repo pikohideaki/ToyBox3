@@ -49,11 +49,14 @@ export class SignUpComponent implements OnInit {
       this.waitingForResponse = false;
       this.setDisplayName();
       this.afAuth.authState.subscribe( val => {
-        let newUser = new UserInfo();
-        newUser.databaseKey = val.uid;
-        newUser.id          = val.uid;
-        newUser.name        = this.displayName;
+        let newUser = new UserInfo({
+          databaseKey     : val.uid,
+          id              : val.uid,
+          name            : this.displayName,
+          dominionGroupID : "",
+        });
         this.afDatabase.list("/userInfo").update( val.uid, newUser );
+        console.log(newUser)
       } );
       this.router.navigate(['/']);
       this.openSnackBar("Successfully logged in!");
