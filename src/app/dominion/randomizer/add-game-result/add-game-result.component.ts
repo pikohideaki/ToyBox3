@@ -39,13 +39,6 @@ export class AddGameResultComponent implements OnInit {
 
   GameResultList: GameResult[] = [];
 
-  Players: {
-      name      : string,
-      selected  : boolean,
-      VP        : number,
-      lessTurns : boolean,
-    }[] = [];
-
   startPlayerName: string = "";
   memo: string = "";
 
@@ -55,6 +48,12 @@ export class AddGameResultComponent implements OnInit {
   @Input() SelectedCards: SelectedCards = new SelectedCards();
 
   PlayersNameList: PlayerName[] = [];
+  Players: {
+      name      : string,
+      selected  : boolean,
+      VP        : number,
+      lessTurns : boolean,
+    }[] = [];
 
 
   newGameResult: GameResult;
@@ -74,6 +73,14 @@ export class AddGameResultComponent implements OnInit {
     afDatabase.list( '/data/PlayersNameList' ).subscribe( val => {
       this.PlayersNameList = this.afDatabaseService.convertAs( val, "PlayersNameList" );
       this.httpGetDone[2] = true;
+
+      this.Players = this.PlayersNameList.map( player => {
+        return {
+          name      : player.name,
+          selected  : false,
+          VP        : 0,
+          lessTurns : false,
+        } } );
     } );
 
     afDatabase.list( '/data/ScoringList' ).subscribe( val => {
@@ -95,18 +102,6 @@ export class AddGameResultComponent implements OnInit {
 
   ngOnInit() {
   }
-
-  // ngOnChanges( changes: SimpleChanges ) {
-  //   if ( changes.PlayersNameList != undefined ) {  // at http-get done
-  //     this.Players = this.PlayersNameList.map( player => {
-  //       return {
-  //         name      : player.name,
-  //         selected  : false,
-  //         VP        : 0,
-  //         lessTurns : false,
-  //       } } );
-  //   }
-  // }
 
 
   httpGetAllDone() : boolean {
@@ -147,8 +142,8 @@ export class AddGameResultComponent implements OnInit {
       date   : this.date,
       place  : this.place,
       memo   : this.memo,
-      selectedDominionSets : this.DominionSetList.map( e => e.selected ),
-      usedCardIDs      : {
+      DominionSetsSelected : this.DominionSetList.map( e => e.selected ),
+      SelectedCardsID      : {
         Prosperity      : this.SelectedCards.Prosperity,
         DarkAges        : this.SelectedCards.DarkAges,
         KingdomCards10  : this.SelectedCards.KingdomCards10 .map( card => this.CardPropertyList[card.index].card_ID ),

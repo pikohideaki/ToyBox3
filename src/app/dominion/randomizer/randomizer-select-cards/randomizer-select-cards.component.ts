@@ -97,9 +97,9 @@ export class RandomizerSelectCardsComponent implements OnInit {
 
     const mySyncGroup = this.syncGroups.find( g => g.id === this.mySyncGroupID() );
 
-    const DominionSets_sync = mySyncGroup.data.DominionSetsSelected;
-    if ( DominionSets_sync !== undefined && DominionSets_sync.length !== 0 ) {
-      this.DominionSetList.forEach( (elem,idx,_) => elem.selected = DominionSets_sync[idx] );
+    const DominionSetsSelected_sync = mySyncGroup.data.DominionSetsSelected;
+    if ( DominionSetsSelected_sync !== undefined && DominionSetsSelected_sync.length !== 0 ) {
+      this.DominionSetList.forEach( (elem,idx,_) => elem.selected = DominionSetsSelected_sync[idx] );
       this.DominionSetListChange.emit( this.DominionSetList );
     }
 

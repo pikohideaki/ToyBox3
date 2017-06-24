@@ -45,7 +45,8 @@ export class SubmitGameResultDialogComponent implements OnInit {
 
 
   submitGameResult() {
-    this.afDatabase.list( '/data/GameResultList/' )
-      .update( `${this.GameResultList.length}`, this.newGameResult );
+    this.afDatabase.list('/data/GameResultList').push( this.newGameResult );
+    // this.afDatabase.list( '/data/GameResultList/' )
+    //   .update( `${this.GameResultList.length}`, this.newGameResult );
   }
 }

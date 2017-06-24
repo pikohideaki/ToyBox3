@@ -12,8 +12,8 @@ export class GameResult {
       score     : number;   // <- calculate locally
     }[];
   memo                 : string;
-  selectedDominionSets : boolean[];
-  usedCardIDs          : {
+  DominionSetsSelected : boolean[];
+  SelectedCardsID      : {
     Prosperity      : boolean;
     DarkAges        : boolean;
     KingdomCards10  : string[];

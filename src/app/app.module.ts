@@ -56,10 +56,10 @@ import { RandomizerSelectCardsComponent  } from './dominion/randomizer/randomize
 import { SyncGroupsComponent             } from './dominion/randomizer/sync-groups/sync-groups.component';
 import { BlackMarketPileComponent        } from './dominion/randomizer/black-market-pile/black-market-pile.component';
 import { ScoringTableComponent           } from './dominion/scoring-table/scoring-table.component';
-import { UserAdminComponent } from './user-admin/user-admin.component';
-import { LoginComponent } from './user-admin/login/login.component';
-import { SignUpComponent } from './user-admin/sign-up/sign-up.component';
-import { ConvertDatabaseComponent } from './convert-database/convert-database.component';
+import { UserAdminComponent              } from './user-admin/user-admin.component';
+import { LoginComponent                  } from './user-admin/login/login.component';
+import { SignUpComponent                 } from './user-admin/sign-up/sign-up.component';
+import { ConvertDatabaseComponent        } from './convert-database/convert-database.component';
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
