@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { MdSnackBar } from '@angular/material';
 
@@ -26,7 +27,8 @@ export class LoginComponent implements OnInit {
   constructor(
     public snackBar: MdSnackBar,
     public afAuth: AngularFireAuth,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -41,7 +43,8 @@ export class LoginComponent implements OnInit {
     this.afAuth.auth.signInWithEmailAndPassword( this.email, this.password )
     .then( () => {
       this.waitingForResponse = false;
-      this.router.navigate(['/']);
+      // this.router.navigate(['/']);
+      this.location.back();
       this.openSnackBar("Successfully logged in!");
     } )
     .catch( (error: any ) => {

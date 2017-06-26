@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
 import { Observable } from 'rxjs/Observable';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
@@ -25,7 +25,7 @@ import { UserInfo } from "../../../user-info";
     './randomizer-select-cards.component.css'
   ]
 })
-export class RandomizerSelectCardsComponent implements OnInit {
+export class RandomizerSelectCardsComponent implements OnInit, OnChanges {
 
   httpGetDone: boolean[] = [false,false];
 
@@ -63,6 +63,15 @@ export class RandomizerSelectCardsComponent implements OnInit {
       this.loadFromSync();
     });
 
+
+    // this.afDatabase.list( '/data/DominionSetNameList' ).subscribe( val => {
+    //   this.httpGetDone[2] = true;
+    //   this.DominionSetList
+    //     = this.afDatabaseService.convertAs( val, "DominionSetNameList" )
+    //             .map( e => { return { name: e, selected: true } } );
+    //   this.loadFromSync();
+    // });
+
     this.afDatabase.list("/userInfo").subscribe( val => {
       this.httpGetDone[0] = true;
       this.users = val.map( e => new UserInfo(e) );
@@ -81,6 +90,14 @@ export class RandomizerSelectCardsComponent implements OnInit {
   }
 
 
+  ngOnChanges( changes: SimpleChanges ) {
+    if ( changes.DominionSetList != undefined ) {  // at http-get done
+      this.loadFromSync();
+      // console.log( "ngOnChanges", this.DominionSetList.map( e => e.selected ) );
+      setTimeout( () => this.loadFromSync(), 100 );
+    }
+  }
+
   httpGetAllDone(): boolean {
     return this.httpGetDone.every( e => e === true );
   }
@@ -88,18 +105,23 @@ export class RandomizerSelectCardsComponent implements OnInit {
 
   mySyncGroupID() {
     let me = this.users.find( user => user.id === this.myID );
-    return ( me? me.dominionGroupID : "" );
+    return ( me ? me.dominionGroupID : "" );
   }
 
 
   private loadFromSync() {
+    // console.log( "loadFromSync", this.httpGetDone, this.DominionSetList.map( e => e.selected ) );
+
     if ( !this.signedIn || !this.httpGetAllDone() ) return;
 
     const mySyncGroup = this.syncGroups.find( g => g.id === this.mySyncGroupID() );
+    if ( !mySyncGroup ) return;
 
     const DominionSetsSelected_sync = mySyncGroup.data.DominionSetsSelected;
     if ( DominionSetsSelected_sync !== undefined && DominionSetsSelected_sync.length !== 0 ) {
-      this.DominionSetList.forEach( (elem,idx,_) => elem.selected = DominionSetsSelected_sync[idx] );
+      for ( let i = 0; i < DominionSetsSelected_sync.length; ++i ) {
+        this.DominionSetList[i].selected = DominionSetsSelected_sync[i];
+      }
       this.DominionSetListChange.emit( this.DominionSetList );
     }
 
@@ -114,10 +136,12 @@ export class RandomizerSelectCardsComponent implements OnInit {
       this.randomizerButtonDisabled = randomizerButtonDisabled_sync;
     }
 
+    // console.log( "loadFromSync done", this.DominionSetList.map( e => e.selected ) );
   }
 
 
   DominionSetListOnChange() {
+    // console.log( "DominionSetListOnChange", this.DominionSetList.map( e => e.selected ) );
     this.DominionSetListChange.emit( this.DominionSetList );
     // this.utils.localStorage_set('DominionSetNameList', this.DominionSetList.map( e => e.selected ) );
     if ( this.signedIn ) {
@@ -153,6 +177,7 @@ export class RandomizerSelectCardsComponent implements OnInit {
     if ( this.DominionSetList.every( DominionSet => !DominionSet.selected ) ) return;
     this.disableRandomizerButton(true);
     this.randomize();
+    this.DominionSetListOnChange();
     this.SelectedCardsOnChange();
   }
 

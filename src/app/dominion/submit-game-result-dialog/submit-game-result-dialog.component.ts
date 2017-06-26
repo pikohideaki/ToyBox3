@@ -45,8 +45,30 @@ export class SubmitGameResultDialogComponent implements OnInit {
 
 
   submitGameResult() {
-    this.afDatabase.list('/data/GameResultList').push( this.newGameResult );
-    // this.afDatabase.list( '/data/GameResultList/' )
-    //   .update( `${this.GameResultList.length}`, this.newGameResult );
+    let grObj = {
+      id      : this.newGameResult.id,
+      date    : this.newGameResult.date.toString(),
+      place   : this.newGameResult.place,
+      players : this.newGameResult.players.map( e => {
+        return {
+          name      : e.name,
+          VP        : e.VP,
+          lessTurns : e.lessTurns,
+        }; } ),
+      memo                 : this.newGameResult.memo,
+      DominionSetsSelected : this.newGameResult.DominionSetsSelected,
+      SelectedCardsID      : {
+        Prosperity      : this.newGameResult.SelectedCardsID.Prosperity,
+        DarkAges        : this.newGameResult.SelectedCardsID.DarkAges,
+        KingdomCards10  : this.newGameResult.SelectedCardsID.KingdomCards10,
+        BaneCard        : this.newGameResult.SelectedCardsID.BaneCard,
+        EventCards      : this.newGameResult.SelectedCardsID.EventCards,
+        Obelisk         : this.newGameResult.SelectedCardsID.Obelisk,
+        LandmarkCards   : this.newGameResult.SelectedCardsID.LandmarkCards,
+        BlackMarketPile : this.newGameResult.SelectedCardsID.BlackMarketPile,
+      }
+    };
+
+    this.afDatabase.list('/data/GameResultList').push( grObj );
   }
 }

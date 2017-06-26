@@ -11,10 +11,10 @@ import * as firebase from 'firebase/app';
 
 import { MyUtilitiesService } from '../../../my-utilities.service';
 import { MyFirebaseSubscribeService } from "../../my-firebase-subscribe.service";
-import { GameResult } from "../../game-result";
+// import { GameResult } from "../../game-result";
 import { SelectedCards } from "../../selected-cards";
 import { SyncGroup } from "../sync-group";
-import { PlayerName } from "../../player-name";
+// import { PlayerName } from "../../player-name";
 import { UserInfo } from "../../../user-info";
 
 

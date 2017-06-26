@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { MdSnackBar } from '@angular/material';
 
@@ -33,6 +34,7 @@ export class SignUpComponent implements OnInit {
     public afAuth: AngularFireAuth,
     private router: Router,
     private afDatabase: AngularFireDatabase,
+    private location: Location
   ) {
   }
 
@@ -58,7 +60,8 @@ export class SignUpComponent implements OnInit {
         this.afDatabase.list("/userInfo").update( val.uid, newUser );
         console.log(newUser)
       } );
-      this.router.navigate(['/']);
+      // this.router.navigate(['/']);
+      this.location.back();
       this.openSnackBar("Successfully logged in!");
     } )
     .catch( (error: any ) => {

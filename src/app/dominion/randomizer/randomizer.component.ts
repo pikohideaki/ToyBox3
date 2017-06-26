@@ -1,19 +1,22 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-
+import 'rxjs/add/operator/toPromise';
 import { Observable } from 'rxjs/Observable';
+
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
+
 
 import { MyUtilitiesService } from '../../my-utilities.service';
 import { MyFirebaseSubscribeService } from "../my-firebase-subscribe.service";
 
 import { CardProperty } from "../card-property";
-import { GameResult } from "../game-result";
+// import { GameResult } from "../game-result";
 import { PlayerName } from "../player-name";
 import { SelectedCards } from "../selected-cards";
-// import { SyncGroup } from "./sync-group";
+import { SyncGroup } from "./sync-group";
+import { UserInfo } from "../../user-info";
 
 
 @Component({
@@ -34,13 +37,53 @@ export class RandomizerComponent implements OnInit {
 
   signedIn: boolean = false;
 
+  // for myGroupID
+  myID: string;
+  users: UserInfo[] = [];
+  syncGroups: { id: string, selected: boolean, data: SyncGroup }[];
+  mySyncGroupName: string;
+
   constructor(
     private utils: MyUtilitiesService,
-    afDatabase: AngularFireDatabase,
+    private afDatabase: AngularFireDatabase,
     private afDatabaseService: MyFirebaseSubscribeService,
     public afAuth: AngularFireAuth
   ) {
-    afAuth.authState.subscribe( val => { this.signedIn = !!val } );
+
+    afAuth.authState.subscribe( user => {
+      this.signedIn = !!user;
+      this.myID = ( this.signedIn ? user.uid : "" );
+
+      if ( this.myID === "" ) return;
+
+      this.afDatabase.object(`/userInfo/${this.myID}`).subscribe( myUserInfo => {
+        let myDominionGroupID = new UserInfo( myUserInfo ).dominionGroupID;
+        console.log(myUserInfo)
+
+        if ( myDominionGroupID === "" ) return;
+
+        this.afDatabase.object(`/syncGroups/${myDominionGroupID}`).subscribe( myDominionGroup => {
+          this.mySyncGroupName = myDominionGroup.name;
+        } );
+      });
+    });
+
+    // afAuth.authState.subscribe( val => {
+    //   this.signedIn = !!val;
+    //   this.myID = ( this.signedIn ? val.uid : "" );
+    // });
+
+    // this.afDatabase.list("/userInfo").subscribe( val => {
+    //   this.httpGetDone[2] = true;
+    //   this.users = val.map( e => new UserInfo(e) );
+
+    //   this.afDatabase.list("/syncGroups", { preserveSnapshot: true }).subscribe( snapshotsGroups => {
+    //     this.httpGetDone[3] = true;
+    //     this.syncGroups = this.afDatabaseService.convertAs( snapshotsGroups, "syncGroups" );
+    //     const mySyncGroup = this.syncGroups.find( g => g.id === this.mySyncGroupID() );
+    //     this.mySyncGroupName = mySyncGroup.data.name;
+    //   });
+    // });
 
 
     // if ( this.utils.localStorage_has('DominionSetNameList') ) {
@@ -65,11 +108,20 @@ export class RandomizerComponent implements OnInit {
 
   }
 
+  ngOnInit() {
+  }
+
+
   httpGetAllDone() : boolean {
     return this.httpGetDone.every( e => e === true );
   }
 
-  ngOnInit() {
-  }
+
+
+  // private mySyncGroupID() {
+  //   let me = this.users.find( user => user.id === this.myID );
+  //   return ( me ? me.dominionGroupID : "" );
+  // }
+
 
 }

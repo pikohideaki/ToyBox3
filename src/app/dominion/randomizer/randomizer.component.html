@@ -15,6 +15,7 @@
   <div class="sidenavMain">
     <button md-button *ngIf="signedIn" (click)="sidenav.open()">
       <md-icon>group</md-icon>
+      <span> Group : {{mySyncGroupName}}</span>
     </button>
 
     <md-tab-group>
