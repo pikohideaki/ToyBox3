@@ -43,7 +43,6 @@ export class LoginComponent implements OnInit {
     this.afAuth.auth.signInWithEmailAndPassword( this.email, this.password )
     .then( () => {
       this.waitingForResponse = false;
-      // this.router.navigate(['/']);
       this.location.back();
       this.openSnackBar("Successfully logged in!");
     } )

@@ -57,7 +57,6 @@ export class GameResultListComponent implements OnInit, OnChanges {
 
   ngOnChanges( changes: SimpleChanges ) {
     if ( changes.GameResultListFiltered != undefined ) {  // at http-get done
-      // this.GameResultListForView = this.GameResultListFiltered.map( x => this.transform(x) );
       this.selectedPageIndex = 0;
     }
   }
@@ -73,20 +72,19 @@ export class GameResultListComponent implements OnInit, OnChanges {
 
   deleteGameResult( no: number ) {
     const grIndex: number = this.GameResultListFiltered.findIndex( e => e.no === no );
-    console.log( this.GameResultListFiltered[grIndex] );
+    const databaseKey = this.GameResultListFiltered[grIndex].databaseKey;
 
     let dialogRef = this.dialog.open( ConfirmDialogComponent );
     dialogRef.componentInstance.message = `No.${no} を削除してもよろしいですか？`;
     dialogRef.afterClosed().subscribe( answer => {
       if ( answer === "yes" ) {
-        this.afDatabase.list( `/data/GameResultList/${no - 1}` ).remove();
+        this.afDatabase.list( `/data/GameResultList/${databaseKey}` ).remove();
         this.openSnackBar();
       }
     });
   }
 
-
-  openSnackBar() {
+  private openSnackBar() {
     this.snackBar.open( "Deleted.", undefined, { duration: 3000 } );
   }
 

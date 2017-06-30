@@ -21,10 +21,6 @@ import { SelectedCards } from "../selected-cards";
 })
 export class SubmitGameResultDialogComponent implements OnInit {
 
-  // @Input() CardPropertyList: CardProperty[] = [];
-  // @Input() DominionSetList: { name: string, selected: boolean }[] = [];
-  @Input() GameResultList: GameResult[] = [];
-
   @Input() newGameResult: GameResult;
 
   constructor(
@@ -46,14 +42,13 @@ export class SubmitGameResultDialogComponent implements OnInit {
 
   submitGameResult() {
     let grObj = {
-      id      : this.newGameResult.id,
       date    : this.newGameResult.date.toString(),
       place   : this.newGameResult.place,
-      players : this.newGameResult.players.map( e => {
+      players : this.newGameResult.players.map( pl => {
         return {
-          name      : e.name,
-          VP        : e.VP,
-          lessTurns : e.lessTurns,
+          name      : pl.name,
+          VP        : pl.VP,
+          lessTurns : pl.lessTurns,
         }; } ),
       memo                 : this.newGameResult.memo,
       DominionSetsSelected : this.newGameResult.DominionSetsSelected,

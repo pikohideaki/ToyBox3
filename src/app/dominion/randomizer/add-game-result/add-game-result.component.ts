@@ -27,7 +27,7 @@ import { CardProperty } from "../../card-property";
 })
 export class AddGameResultComponent implements OnInit {
 
-  httpGetDone: boolean[] = [false, false, false];
+  httpGetDone: boolean = false;
 
 
   date: Date;
@@ -70,24 +70,26 @@ export class AddGameResultComponent implements OnInit {
 
     this.stateCtrl = new FormControl();
 
-    afDatabase.list( '/data/PlayersNameList' ).subscribe( val => {
-      this.PlayersNameList = this.afDatabaseService.convertAs( val, "PlayersNameList" );
-      this.httpGetDone[2] = true;
+    const afdb_PlayersNameList = afDatabase.list( '/data/PlayersNameList' );
+    const afdb_ScoringList     = afDatabase.list( '/data/ScoringList' );
+    const afdb_GameResultList  = afDatabase.list( '/data/GameResultList' );
 
-      this.Players = this.PlayersNameList.map( player => {
-        return {
-          name      : player.name,
-          selected  : false,
-          VP        : 0,
-          lessTurns : false,
-        } } );
+    Promise.all([
+      afdb_PlayersNameList.first().toPromise(),
+      afdb_ScoringList.first().toPromise(),
+      afdb_GameResultList.first().toPromise(),
+    ])
+    .then( () => this.httpGetDone = true );
+
+
+    afdb_PlayersNameList.subscribe( val => {
+      this.PlayersNameList = this.afDatabaseService.convertAs( val, "PlayersNameList" );
+      this.initializePlayers();
     } );
 
-    afDatabase.list( '/data/ScoringList' ).subscribe( val => {
-      this.httpGetDone[0] = true;
+    afdb_ScoringList.subscribe( val => {
       let ScoringList = this.afDatabaseService.convertAs( val, "ScoringList" );
-      afDatabase.list( '/data/GameResultList' ).subscribe( val => {
-        this.httpGetDone[1] = true;
+      afdb_GameResultList.subscribe( val => {
         this.GameResultList = this.afDatabaseService.convertAs( val, "GameResultList", ScoringList );
         this.places = this.utils.uniq( this.GameResultList.map( e => e.place ) )
                                 .filter( e => e != "" );
@@ -103,14 +105,19 @@ export class AddGameResultComponent implements OnInit {
   ngOnInit() {
   }
 
-
-  httpGetAllDone() : boolean {
-    return this.httpGetDone.every( e => e === true );
-  }
-
   filterPlaces( val: string ): string[] {
     return val ? this.places.filter( s => this.utils.submatch( s, val, true ) )
            : this.places;
+  }
+
+  private initializePlayers(): void {
+    this.Players = this.PlayersNameList.map( player => {
+      return {
+        name      : player.name,
+        selected  : false,
+        VP        : 0,
+        lessTurns : false,
+      } } );
   }
 
   selectedPlayers(): any[] {
@@ -124,13 +131,13 @@ export class AddGameResultComponent implements OnInit {
   }
 
 
-  playerNumAlert(): boolean {
-    return ( 2 <= this.selectedPlayers().length && this.selectedPlayers().length <= 4 );
+  private playerNumOK(): boolean {
+    return ( 2 <= this.selectedPlayers().length && this.selectedPlayers().length <= 6 );
   }
 
 
   submitGameResult(): void {
-    if ( !this.playerNumAlert() ) return;
+    if ( !this.playerNumOK() ) return;
     let dialogRef = this.dialog.open( SubmitGameResultDialogComponent, {
         height: '80%',
         width : '80%',
@@ -138,7 +145,6 @@ export class AddGameResultComponent implements OnInit {
 
     this.newGameResult = new GameResult({
       no     : this.GameResultList.length + 1,
-      id     : Date.now(),
       date   : this.date,
       place  : this.place,
       memo   : this.memo,
@@ -163,11 +169,8 @@ export class AddGameResultComponent implements OnInit {
               }
             }),
     });
-    // this.newGameResultChange.emit( this.newGameResult );
 
     dialogRef.componentInstance.newGameResult    = this.newGameResult;
-    dialogRef.componentInstance.GameResultList   = this.GameResultList;
-    // dialogRef.componentInstance.CardPropertyList = this.CardPropertyList;
 
     dialogRef.afterClosed().subscribe( result => {
       if ( result == "OK Clicked" ) {
@@ -183,7 +186,7 @@ export class AddGameResultComponent implements OnInit {
   }
 
 
-  openSnackBar() {
+  private openSnackBar() {
     this.snackBar.open( "Successfully Submitted!", undefined, { duration: 3000 } );
   }
 

@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -25,14 +26,13 @@ export class AppComponent {
     private router: Router
   ) {
     this.user = afAuth.authState;
-    this.user.subscribe( _ => this.signedIn = !!this.afAuth.auth.currentUser );
+    this.user.subscribe( () => this.signedIn = !!this.afAuth.auth.currentUser );
   }
 
   logout() {
     if ( !this.afAuth.auth.currentUser ) return;
     this.afAuth.auth.signOut()
     .then( () => {
-      this.router.navigate(['/']);
       this.openSnackBar("Successfully signed out!");
     } );
   }

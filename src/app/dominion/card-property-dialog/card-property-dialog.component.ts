@@ -20,7 +20,6 @@ export class CardPropertyDialogComponent implements OnInit {
 
   card: any;
   faceUp = true;
-  // fileSize = '';
   width: number;
 
 

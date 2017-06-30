@@ -55,7 +55,6 @@ export class MyFirebaseSubscribeService {
         return result;
 
       case "syncGroups":
-        // val.forEach( e => result.push( new SyncGroup(e) ) );
         val.forEach( e => result.push( { id: e.key, selected: false, data: new SyncGroup( e.val() ) } ) );
         console.log( "convertAs syncGroups done. " );
         return result;

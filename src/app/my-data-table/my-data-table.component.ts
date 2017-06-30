@@ -73,8 +73,6 @@ export class MyDataTableComponent implements OnInit, OnChanges  {
     const uniqValues = this.utils.uniq( this.filteredData.map( e => e[columnName] ) );
     return inputString ? uniqValues.filter( s => this.utils.submatch( s, inputString, true ) )
                        : uniqValues;
-    // return inputString ? uniqValues.filter( s => new RegExp(`^${inputString}`, 'yi').test(s) )
-                    //    : uniqValues;
   }
 
 
@@ -98,8 +96,6 @@ export class MyDataTableComponent implements OnInit, OnChanges  {
         if ( lineOfData[ column.name ] != column.manipState ) return false;
 
       case 'incrementalSearch' :
-        // let regexp = new RegExp( column.manipState, "gi" );
-        // if ( !regexp.test( lineOfData[ column.name ] ) ) return false;
         if ( !this.utils.submatch( lineOfData[ column.name ], column.manipState, true ) ) return false;
         break;
 

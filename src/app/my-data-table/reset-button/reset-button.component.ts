@@ -7,8 +7,6 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class ResetButtonComponent implements OnInit {
 
-  // @Input() columnSettings: any[] = [];
-  // @Input() updateFunction;
   @Output() click = new EventEmitter<void>();
 
   constructor() { }

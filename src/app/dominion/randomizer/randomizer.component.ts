@@ -27,7 +27,8 @@ import { UserInfo } from "../../user-info";
 })
 export class RandomizerComponent implements OnInit {
 
-  httpGetDone: boolean[] = [false,false];
+  // httpGetDone: boolean[] = [false,false];
+  httpGetDone: boolean = false;
 
   DominionSetList: { name: string, selected: boolean }[] = [];
   CardPropertyList: CardProperty[] = [];
@@ -38,10 +39,12 @@ export class RandomizerComponent implements OnInit {
   signedIn: boolean = false;
 
   // for myGroupID
-  myID: string;
   users: UserInfo[] = [];
   syncGroups: { id: string, selected: boolean, data: SyncGroup }[];
+
+  user: Observable<firebase.User>;
   mySyncGroupName: string;
+
 
   constructor(
     private utils: MyUtilitiesService,
@@ -50,59 +53,27 @@ export class RandomizerComponent implements OnInit {
     public afAuth: AngularFireAuth
   ) {
 
-    afAuth.authState.subscribe( user => {
-      this.signedIn = !!user;
-      this.myID = ( this.signedIn ? user.uid : "" );
-
-      if ( this.myID === "" ) return;
-
-      this.afDatabase.object(`/userInfo/${this.myID}`).subscribe( myUserInfo => {
-        let myDominionGroupID = new UserInfo( myUserInfo ).dominionGroupID;
-        console.log(myUserInfo)
-
-        if ( myDominionGroupID === "" ) return;
-
-        this.afDatabase.object(`/syncGroups/${myDominionGroupID}`).subscribe( myDominionGroup => {
-          this.mySyncGroupName = myDominionGroup.name;
-        } );
-      });
-    });
-
-    // afAuth.authState.subscribe( val => {
-    //   this.signedIn = !!val;
-    //   this.myID = ( this.signedIn ? val.uid : "" );
-    // });
-
-    // this.afDatabase.list("/userInfo").subscribe( val => {
-    //   this.httpGetDone[2] = true;
-    //   this.users = val.map( e => new UserInfo(e) );
-
-    //   this.afDatabase.list("/syncGroups", { preserveSnapshot: true }).subscribe( snapshotsGroups => {
-    //     this.httpGetDone[3] = true;
-    //     this.syncGroups = this.afDatabaseService.convertAs( snapshotsGroups, "syncGroups" );
-    //     const mySyncGroup = this.syncGroups.find( g => g.id === this.mySyncGroupID() );
-    //     this.mySyncGroupName = mySyncGroup.data.name;
-    //   });
-    // });
+    this.user = afAuth.authState;
+    this.user.subscribe( () => 
+      this.getMySyncGroupName().then( val => this.mySyncGroupName = val ) );
 
 
-    // if ( this.utils.localStorage_has('DominionSetNameList') ) {
-    //   let ls = this.utils.localStorage_get('DominionSetNameList');
-    //   this.DominionSetList.forEach( elm => {
-    //     let localValue = ls.find( e => e.name == elm.name );
-    //     if ( localValue ) { elm.selected = localValue.selected; }
-    //   })
-    // }
+    const afDB_DominionSetNameList = afDatabase.list( '/data/DominionSetNameList' );
+    const afDB_CardPropertyList = afDatabase.list( '/data/CardPropertyList' );
 
-    afDatabase.list( '/data/DominionSetNameList' ).subscribe( val => {
-      this.httpGetDone[0] = true;
+    Promise.all([
+      afDB_DominionSetNameList.first().toPromise(),
+      afDB_CardPropertyList.first().toPromise()
+    ]).then( () => this.httpGetDone = true );
+
+
+    afDB_DominionSetNameList.subscribe( val => {
       this.DominionSetList
         = this.afDatabaseService.convertAs( val, "DominionSetNameList" )
                 .map( e => { return { name: e, selected: true } } );
     });
 
-    afDatabase.list( '/data/CardPropertyList' ).subscribe( val => {
-      this.httpGetDone[1] = true;
+    afDB_CardPropertyList.subscribe( val => {
       this.CardPropertyList = this.afDatabaseService.convertAs( val, "CardPropertyList" );
     });
 
@@ -112,16 +83,29 @@ export class RandomizerComponent implements OnInit {
   }
 
 
-  httpGetAllDone() : boolean {
-    return this.httpGetDone.every( e => e === true );
+  private getMySyncGroupName(): Promise<string> {
+    return ( async () => {
+      const me = await this.user.first().toPromise();
+      if ( !me ) return "";
+
+      this.signedIn = !!me;
+
+      if ( me.uid === "" ) return "";
+
+      const myUserInfo
+        = await this.afDatabase.object(`/userInfo/${me.uid}`)
+                  .first().toPromise();
+
+      const myDominionGroupID = new UserInfo( myUserInfo ).dominionGroupID;
+
+      if ( myDominionGroupID === "" ) return "";
+
+      const myDominionGroup
+        = await this.afDatabase.object(`/syncGroups/${myDominionGroupID}`)
+                  .first().toPromise();
+      
+      return myDominionGroup.name;
+    })();
   }
-
-
-
-  // private mySyncGroupID() {
-  //   let me = this.users.find( user => user.id === this.myID );
-  //   return ( me ? me.dominionGroupID : "" );
-  // }
-
 
 }

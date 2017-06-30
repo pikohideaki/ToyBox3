@@ -1,7 +1,7 @@
 
 <h1 md-dialog-title>{{card.name_jp}} ({{card.name_eng}})</h1>
 <div md-dialog-content>
-  <div class="description">
+  <div class=""><!--description-->
     <ul>
       <li> 【Card No.】
         {{card.no                      }}
@@ -68,8 +68,9 @@
   <div class="image">
     <dominion-card-image [card]='card' [faceUp]='faceUp' [width]='width'></dominion-card-image>
   </div>
+  <div class="clear"></div>
 </div>
 
-<div md-dialog-actions class='actionButtons'>
+<div md-dialog-actions class=''><!--actionButtons-->
     <button md-raised-button color='primary' class='actionButton' (click)="dialogRef.close()">OK</button>
 </div>

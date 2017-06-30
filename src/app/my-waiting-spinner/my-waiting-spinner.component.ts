@@ -8,6 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class MyWaitingSpinnerComponent implements OnInit {
 
   @Input() done: boolean = false;
+
   constructor() { }
 
   ngOnInit() {

@@ -12,15 +12,14 @@ export class SyncGroup {
   // gameResult    : GameResult;
 
   constructor( sgObj? ) {
-    this.name                 = "";
-    this.password             = "";
-    this.timeStamp            = 0;
-    this.SelectedCards        = new SelectedCards();
-    this.DominionSetsSelected = [];
+    this.name                     = "";
+    this.password                 = "";
+    this.timeStamp                = 0;
+    this.SelectedCards            = new SelectedCards();
+    this.DominionSetsSelected     = [];
     this.randomizerButtonDisabled = false;
     if ( sgObj ) {
-      Object.keys( sgObj ).filter( key => key !== "members" )
-                          .forEach( key => this[key] = sgObj[key] );
+      Object.keys( sgObj ).forEach( key => this[key] = sgObj[key] );
     }
   }
 

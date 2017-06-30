@@ -76,7 +76,6 @@ export class CardPropertyListComponent implements OnInit {
             width : '80%',
         });
     dialogRef.componentInstance.card = selectedCardForView;
-    // dialogRef.afterClosed().subscribe( result => {} );
   }
 }
 

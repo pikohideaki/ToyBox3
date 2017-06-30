@@ -20,7 +20,6 @@ export class SignUpComponent implements OnInit {
 
   waitingForResponse: boolean = false;
 
-  // user: Observable<firebase.User>;
   email: string;
   password: string;
   displayName: string;
@@ -47,20 +46,18 @@ export class SignUpComponent implements OnInit {
 
     this.waitingForResponse = true;
     this.afAuth.auth.createUserWithEmailAndPassword( this.email, this.password )
-    .then( () => {
+    .then( afUser => {
       this.waitingForResponse = false;
       this.setDisplayName();
-      this.afAuth.authState.subscribe( val => {
-        let newUser = new UserInfo({
-          databaseKey     : val.uid,
-          id              : val.uid,
-          name            : this.displayName,
-          dominionGroupID : "",
-        });
-        this.afDatabase.list("/userInfo").update( val.uid, newUser );
-        console.log(newUser)
-      } );
-      // this.router.navigate(['/']);
+
+      let newUser = new UserInfo({
+        databaseKey     : afUser.uid,
+        id              : afUser.uid,
+        name            : this.displayName,
+        dominionGroupID : "",
+      });
+      this.afDatabase.list("/userInfo").update( afUser.uid, newUser );
+
       this.location.back();
       this.openSnackBar("Successfully logged in!");
     } )

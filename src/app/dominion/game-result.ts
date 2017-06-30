@@ -1,7 +1,8 @@
 
 export class GameResult {
+  databaseKey: string;  // key of this game-result in fire-database
   no      : number;   // <- calculate locally
-  id      : number;
+
   date    : Date;
   place   : string;
   players : {
@@ -36,7 +37,6 @@ export class GameResult {
   }
 
   rankPlayers() {
-    // console.log(this)
     this.players.forEach( e => e.rank = 1 );  // initialize ranks
 
     for ( let j = 1; j < this.players.length; j++ ) {
@@ -56,7 +56,7 @@ export class GameResult {
 
   setScores( scoreTable: number[][] ) {
     // httpGetGameResultList のときに呼び出される
-    // （GetScoreListは1度だけ行いたいのでここでhttp.getはしない）
+    // GetScoreListは1度だけ行いたいのでここでhttp.getはしない
 
     // 同着に対応
     let scoringTemp: number[] = Array.from( scoreTable[this.players.length] )

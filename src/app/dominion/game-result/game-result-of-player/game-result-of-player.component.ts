@@ -18,8 +18,8 @@ export class GameResultOfPlayerComponent implements OnInit, OnChanges {
 
   @Input() GameResultListFiltered: GameResult[] = [];
   @Input() playerNumOptions: { playerNum: number, selected: boolean }[] = [];
-  rankOptions: boolean[] = [];
 
+  rankOptions: boolean[] = [];
 
   GameResultOfEachPlayer = {};
   GameResultOfEachPlayerForView = [];

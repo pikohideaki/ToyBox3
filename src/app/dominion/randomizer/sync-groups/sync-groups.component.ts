@@ -56,11 +56,13 @@ export class SyncGroupsComponent implements OnInit {
       this.myID = ( this.signedIn ? val.uid : "" );
     });
 
-    this.afDatabase.list("/userInfo").subscribe( val => {
+    this.afDatabase.list("/userInfo")
+    .subscribe( val => {
       this.users = val.map( e => new UserInfo(e) );
     });
 
-    this.afDatabase.list("/syncGroups", { preserveSnapshot: true }).subscribe( snapshots => {
+    this.afDatabase.list("/syncGroups", { preserveSnapshot: true })
+    .subscribe( snapshots => {
       this.syncGroups = this.afDatabaseService.convertAs( snapshots, "syncGroups" );
     });
   }

@@ -21,11 +21,8 @@ export class GameResultComponent implements OnInit {
 
   playerNumOptions: { playerNum: number, selected: boolean }[] = [];
 
-
   dateBegin: Date;
   dateEnd  : Date;
-
-  // GetGameResultListUrl = `${this.HOST_NAME}/api/GameResultList.json`;
 
 
   constructor(

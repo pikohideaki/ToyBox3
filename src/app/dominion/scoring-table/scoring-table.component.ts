@@ -46,20 +46,19 @@ export class ScoringTableComponent implements OnInit {
       this.ScoringList = this.afDatabaseService.convertAs( val, "ScoringList" );
 
       this.ScoringListForView
-        = this.ScoringList.map( (value,index,_) => { return { playerNum: index, score: value } } )
-                          .filter( e => e.score[1] > 0 )
-                          .map( e => {
-                            return {
-                              playerNum : e.playerNum,
-                              rank_1st : ( e.score[1] < 0 ? '' : e.score[1].toString() ),
-                              rank_2nd : ( e.score[2] < 0 ? '' : e.score[2].toString() ),
-                              rank_3rd : ( e.score[3] < 0 ? '' : e.score[3].toString() ),
-                              rank_4th : ( e.score[4] < 0 ? '' : e.score[4].toString() ),
-                              rank_5th : ( e.score[5] < 0 ? '' : e.score[5].toString() ),
-                              rank_6th : ( e.score[6] < 0 ? '' : e.score[6].toString() ),
-                            } } );
-      console.log(this.ScoringListForView)
-
+        = this.ScoringList
+            .map( (value,index,_) => { return { playerNum: index, score: value } } )
+            .filter( e => e.score[1] > 0 )
+            .map( e => {
+              return {
+                playerNum : e.playerNum,
+                rank_1st : ( e.score[1] < 0 ? '' : e.score[1].toString() ),
+                rank_2nd : ( e.score[2] < 0 ? '' : e.score[2].toString() ),
+                rank_3rd : ( e.score[3] < 0 ? '' : e.score[3].toString() ),
+                rank_4th : ( e.score[4] < 0 ? '' : e.score[4].toString() ),
+                rank_5th : ( e.score[5] < 0 ? '' : e.score[5].toString() ),
+                rank_6th : ( e.score[6] < 0 ? '' : e.score[6].toString() ),
+              } } );
     } );
   }
 
