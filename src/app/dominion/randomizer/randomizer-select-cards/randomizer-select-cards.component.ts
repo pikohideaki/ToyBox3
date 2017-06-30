@@ -27,7 +27,7 @@ import { UserInfo } from "../../../user-info";
 })
 export class RandomizerSelectCardsComponent implements OnInit, OnChanges {
 
-  httpGetDone: boolean[] = [false,false];
+  httpGetDone: boolean = false;
 
   @Input() CardPropertyList: CardProperty[] = [];
 
@@ -72,14 +72,21 @@ export class RandomizerSelectCardsComponent implements OnInit, OnChanges {
     //   this.loadFromSync();
     // });
 
-    this.afDatabase.list("/userInfo").subscribe( val => {
-      this.httpGetDone[0] = true;
+    const afDB_userInfo$   = this.afDatabase.list("/userInfo");
+    const afDB_syncGroups$ = afDatabase.list("/syncGroups", { preserveSnapshot: true });
+
+    Promise.all([
+      afDB_userInfo$.first().toPromise(),
+      afDB_syncGroups$.first().toPromise()
+    ]).then( () => this.httpGetDone = true );
+
+
+    afDB_userInfo$.subscribe( val => {
       this.users = val.map( e => new UserInfo(e) );
       this.loadFromSync();
     });
 
-    afDatabase.list("/syncGroups", { preserveSnapshot: true }).subscribe( snapshotsGroups => {
-      this.httpGetDone[1] = true;
+    afDB_syncGroups$.subscribe( snapshotsGroups => {
       this.syncGroups = this.afDatabaseService.convertAs( snapshotsGroups, "syncGroups" );
       this.loadFromSync();
     });
@@ -93,13 +100,8 @@ export class RandomizerSelectCardsComponent implements OnInit, OnChanges {
   ngOnChanges( changes: SimpleChanges ) {
     if ( changes.DominionSetList != undefined ) {  // at http-get done
       this.loadFromSync();
-      // console.log( "ngOnChanges", this.DominionSetList.map( e => e.selected ) );
       setTimeout( () => this.loadFromSync(), 100 );
     }
-  }
-
-  httpGetAllDone(): boolean {
-    return this.httpGetDone.every( e => e === true );
   }
 
 
@@ -112,7 +114,7 @@ export class RandomizerSelectCardsComponent implements OnInit, OnChanges {
   private loadFromSync() {
     // console.log( "loadFromSync", this.httpGetDone, this.DominionSetList.map( e => e.selected ) );
 
-    if ( !this.signedIn || !this.httpGetAllDone() ) return;
+    if ( !this.signedIn || !this.httpGetDone ) return;
 
     const mySyncGroup = this.syncGroups.find( g => g.id === this.mySyncGroupID() );
     if ( !mySyncGroup ) return;

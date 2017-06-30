@@ -31,9 +31,9 @@
   <!--プレイヤー-->
   <div class="marginedElement">
     <p>参加者を選択（2~4人）：</p>
-    <my-waiting-spinner *ngIf="!httpGetAllDone()"></my-waiting-spinner>
+    <my-waiting-spinner *ngIf="!httpGetDone"></my-waiting-spinner>
 
-    <div *ngIf="httpGetAllDone()">
+    <div *ngIf="httpGetDone">
       <ng-container *ngFor="let player of Players" >
         <md-checkbox class="playerChbox" [(ngModel)]="player.selected" >
           {{player.name}}
